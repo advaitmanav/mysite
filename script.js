@@ -1,19 +1,9 @@
 const quotes = [
-    { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
-    { text: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" },
-    { text: "Stay hungry. Stay foolish.", author: "Steve Jobs" },
-    { text: "Life is what happens to you while you're busy making other plans.", author: "John Lennon" },
-    { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein" },
-    { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
-    { text: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius" },
-    { text: "Everything you've ever wanted is on the other side of fear.", author: "George Addair" },
-    { text: "Your limitation—it's only your imagination.", author: "Unknown" },
-    { text: "Push yourself, because no one else is going to do it for you.", author: "Unknown" },
-    { text: "Great things never come from comfort zones.", author: "Unknown" },
-    { text: "Dream it. Wish it. Do it.", author: "Unknown" },
-    { text: "Success doesn't just find you. You have to go out and get it.", author: "Unknown" },
-    { text: "The harder you work for something, the greater you'll feel when you achieve it.", author: "Unknown" },
-    { text: "Dream bigger. Do bigger.", author: "Unknown" }
+    { text: "When uncreated light appears, there is nothing looking at it. It is present to itself. It is who we are. We are not experiencing the state; we are the state.", author: "Robert" },
+    { text: "For that which sees is itself and the thing which is seen.", author: "Plotinus" },
+    { text: "The sequence is the second best plan. Uncreated Light is the best plan.", author: "Robert" },
+    { text: "When you give with expectations in return, you lose", author: "Advait" },
+    { text: "When you love something or someone with all your heart, there is no backup option.", author: "Advait 2024" },
 ];
 
 const quoteEl = document.getElementById('quote');
