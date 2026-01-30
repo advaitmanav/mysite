@@ -9,6 +9,7 @@ const quotes = [
     { text: "The sequence is the second best plan. Uncreated Light is the best plan.", author: "R.B." },
     { text: "When you love something or someone will all your heart, there is no backup option.", author: "Advait 2024" },
     { text: "When you give with expectations in return, you're already lost in the first place", author: "Advait 2025" },
+    { text: "When efforts are spent for love, it will always be exhausting. When efforts are given with love, it forsure becomes blossoming.", author: "Advait 2026" },
    
 ];
 
