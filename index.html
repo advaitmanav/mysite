@@ -9,12 +9,16 @@
 <body>
 
     <button id="themeToggle" class="theme-btn">🌙</button>
-    <button id="autoToggle" class="theme-btn auto-btn">⏱️</button>
+
+    <div class="auto-wrap">
+        <svg class="ring" width="52" height="52">
+            <circle cx="26" cy="26" r="22"></circle>
+        </svg>
+        <button id="autoToggle" class="theme-btn auto-btn">⏱️</button>
+    </div>
 
     <div class="container">
-        <blockquote id="quote" class="quote">
-            Loading...
-        </blockquote>
+        <blockquote id="quote" class="quote">Loading...</blockquote>
         <span id="author" class="author"> " "</span>
         <button id="newQuote" class="btn">✦ Surprise Me ✦</button>
     </div>
