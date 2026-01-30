@@ -1,23 +1,27 @@
 const quotes = [
-    { text: "When uncreated light appears, there is nothing looking at it. It is present to itself. It is who we are.  We are not experiencing the state; we are the state.", author: "Robert" },
-    { text: "The sequence is the second best plan. Uncreated Light is the best plan.", author: "Robert" },
-    { text: "When you give with expectations in return, you are already lost", author: "Advait" },
-    { text: "When you love something or someone with all your heart, there is no backup option.", author: "Advait 2024" },
+    { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+    { text: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" },
+    { text: "Stay hungry. Stay foolish.", author: "Steve Jobs" },
+    { text: "Life is what happens to you while you're busy making other plans.", author: "John Lennon" },
+    { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein" },
+    { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+    { text: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius" },
+    { text: "Everything you've ever wanted is on the other side of fear.", author: "George Addair" },
+    { text: "Your limitation—it's only your imagination.", author: "Unknown" },
+    { text: "Push yourself, because no one else is going to do it for you.", author: "Unknown" },
+    { text: "Great things never come from comfort zones.", author: "Unknown" },
+    { text: "Dream it. Wish it. Do it.", author: "Unknown" },
+    { text: "Success doesn't just find you. You have to go out and get it.", author: "Unknown" },
+    { text: "The harder you work for something, the greater you'll feel when you achieve it.", author: "Unknown" },
+    { text: "Dream bigger. Do bigger.", author: "Unknown" }
 ];
+
 const quoteEl = document.getElementById('quote');
 const authorEl = document.getElementById('author');
 const btn = document.getElementById('newQuote');
-const timerProgress = document.querySelector('.timer-progress');
-const btnText = document.querySelector('.btn-text');
 
 let touchActive = false;
-let timerInterval;
-let timeLeft = 10;
-let isTimerRunning = false;
 
-const CIRCUMFERENCE = 276.46; // 2 * π * 44
-
-// Glitter effect
 document.addEventListener('mousemove', throttle((e) => {
     if (!touchActive) createGlitterTrail(e.clientX, e.clientY);
 }, 20));
@@ -63,46 +67,7 @@ function throttle(func, limit) {
     }
 }
 
-// PERFECT 10s ANTI-CLOCKWISE BORDER TIMER
-function startTimer() {
-    if (isTimerRunning) return;
-    
-    isTimerRunning = true;
-    timeLeft = 10;
-    btn.classList.remove('timer-complete');
-    
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        const progress = (10 - timeLeft) / 10; // 0 to 1
-        timerProgress.style.strokeDashoffset = CIRCUMFERENCE * (1 - progress);
-        
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            triggerAutoClick();
-        }
-    }, 1000);
-}
-
-function resetTimer() {
-    clearInterval(timerInterval);
-    isTimerRunning = false;
-    timeLeft = 10;
-    timerProgress.style.strokeDashoffset = CIRCUMFERENCE;
-    btn.classList.remove('timer-complete');
-}
-
-function triggerAutoClick() {
-    btn.classList.add('timer-complete');
-    // Auto press animation + quote change
-    setTimeout(() => {
-        newQuote();
-        setTimeout(startTimer, 300);
-    }, 500);
-}
-
 function newQuote() {
-    resetTimer();
-    
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
     
     quoteEl.style.animation = 'none';
@@ -116,19 +81,19 @@ function newQuote() {
     
     quoteEl.style.animation = 'fadeInUp 1.2s cubic-bezier(0.23, 1, 0.320, 1) forwards';
     authorEl.style.animation = 'fadeInUp 1.2s cubic-bezier(0.23, 1, 0.320, 1) 0.4s forwards';
+    
+    btn.style.transform = 'scale(0.96)';
+    setTimeout(() => btn.style.transform = 'scale(1)', 120);
 }
 
-// Manual interactions reset timer
 btn.addEventListener('click', (e) => {
     e.preventDefault();
-    resetTimer();
     newQuote();
     createRipple(e);
 });
 
 btn.addEventListener('touchstart', (e) => {
     e.preventDefault();
-    resetTimer();
     newQuote();
     createRipple(e.changedTouches[0]);
 });
@@ -136,8 +101,8 @@ btn.addEventListener('touchstart', (e) => {
 function createRipple(e) {
     const rect = btn.getBoundingClientRect();
     const size = Math.max(rect.width, rect.height) * 2;
-    const x = (e.clientX || e.touches[0].clientX) - rect.left - size / 2;
-    const y = (e.clientY || e.touches[0].clientY) - rect.top - size / 2;
+    const x = e.clientX || e.touches[0].clientX - rect.left - size / 2;
+    const y = e.clientY || e.touches[0].clientY - rect.top - size / 2;
     
     const ripple = document.createElement('span');
     ripple.style.cssText = `
@@ -146,18 +111,16 @@ function createRipple(e) {
         height: ${size}px;
         left: ${x}px;
         top: ${y}px;
-        background: rgba(255,215,0,0.4);
+        background: rgba(255,255,255,0.4);
         border-radius: 50%;
         transform: scale(0);
         animation: ripple 0.5s linear;
         pointer-events: none;
-        z-index: 10;
     `;
     btn.appendChild(ripple);
     setTimeout(() => ripple.remove(), 500);
 }
 
-// Swipe + keyboard
 let startX, startY;
 document.addEventListener('touchstart', (e) => {
     startX = e.touches[0].clientX;
@@ -171,7 +134,6 @@ document.addEventListener('touchend', (e) => {
     const diffX = Math.abs(startX - endX);
     const diffY = Math.abs(startY - endY);
     if (diffX > 50 || diffY > 50) {
-        resetTimer();
         newQuote();
     }
 });
@@ -179,15 +141,10 @@ document.addEventListener('touchend', (e) => {
 document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
         e.preventDefault();
-        resetTimer();
         newQuote();
     }
 });
 
-// Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        newQuote();
-        setTimeout(startTimer, 500);
-    }, 400);
+    setTimeout(() => newQuote(), 400);
 });
