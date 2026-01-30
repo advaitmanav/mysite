@@ -1,29 +1,22 @@
-.auto-wrap {
+.top-controls {
     position: fixed;
     top: 20px;
-    right: 80px;
+    right: 20px;
+    display: flex;
+    gap: 12px;
+    z-index: 10000;
+}
+
+.auto-wrap {
+    position: relative;
     width: 52px;
     height: 52px;
-    z-index: 9999;
 }
 
 .auto-btn {
     position: absolute;
     top: 0;
     left: 0;
-}
-
-.auto-btn.active {
-    box-shadow:
-        0 0 12px rgba(255,255,255,0.6),
-        0 0 25px rgba(255,255,255,0.4),
-        inset 0 0 10px rgba(255,255,255,0.2);
-    animation: pulseGlow 1.5s ease-in-out infinite;
-}
-
-@keyframes pulseGlow {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.06); }
 }
 
 .ring {
@@ -38,5 +31,20 @@
     fill: none;
     stroke: rgba(255,255,255,0.9);
     stroke-width: 2;
+    stroke-dasharray: 138;
+    stroke-dashoffset: 138;
     transition: stroke-dashoffset 0.1s linear;
+}
+
+.auto-btn.active {
+    box-shadow:
+        0 0 12px rgba(255,255,255,0.6),
+        0 0 25px rgba(255,255,255,0.4),
+        inset 0 0 10px rgba(255,255,255,0.2);
+    animation: pulseGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
 }
