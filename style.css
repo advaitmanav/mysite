@@ -6,11 +6,12 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--color1, #a8edea) 0%, var(--color2, #fed6e3) 100%);
     min-height: 100vh;
     overflow-x: hidden;
     position: relative;
-    touch-action: manipulation; /* Better mobile touch */
+    touch-action: manipulation;
+    transition: background 3s cubic-bezier(0.23, 1, 0.320, 1);
 }
 
 body::before {
@@ -21,9 +22,9 @@ body::before {
     width: 100%;
     height: 100%;
     background: 
-        radial-gradient(circle at 20% 80%, rgba(120,119,198,0.4) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.2) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(120,219,255,0.2) 0%, transparent 50%);
+        radial-gradient(circle at 20% 80%, rgba(255,255,255,0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255,255,255,0.08) 0%, transparent 50%);
     pointer-events: none;
     z-index: 1;
 }
@@ -90,7 +91,6 @@ body::before {
     box-shadow: 0 8px 25px rgba(0,0,0,0.3);
 }
 
-/* ENHANCED MOBILE GLITTER - Touch optimized */
 .glitter {
     position: fixed;
     pointer-events: none;
@@ -107,7 +107,6 @@ body::before {
 .glitter.medium { width: 7px; height: 7px; background: radial-gradient(circle, #ffffff 30%, #add8e6 70%, transparent 80%); }
 .glitter.small { width: 5px; height: 5px; background: radial-gradient(circle, #ffffff 40%, #ffc0cb 80%, transparent 90%); }
 
-/* Animations */
 @keyframes fadeInUp {
     to { opacity: 1; transform: translateY(0); }
 }
@@ -122,7 +121,6 @@ body::before {
     to { transform: scale(4); opacity: 0; }
 }
 
-/* MOBILE RESPONSIVE BREAKPOINTS */
 @media (max-width: 768px) {
     .container {
         padding: 3rem 1.25rem;
@@ -147,7 +145,6 @@ body::before {
         padding: 1.6rem 4rem;
         font-size: clamp(1rem, 4vw, 1.15rem);
         min-width: 240px;
-        margin: 0 auto;
     }
 }
 
@@ -171,7 +168,6 @@ body::before {
     }
 }
 
-/* Landscape mobile */
 @media (max-height: 500px) and (orientation: landscape) {
     .container {
         padding: 1.5rem;
