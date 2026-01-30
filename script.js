@@ -11,7 +11,6 @@ const quotes = [
     { text: "When efforts are spent for love, it will always be exhausting. When efforts are given with love, it forsure becomes blossoming.", author: "Advait 2026" }
 ];
 
-
 const quoteEl = document.getElementById('quote');
 const authorEl = document.getElementById('author');
 const btn = document.getElementById('newQuote');
@@ -30,29 +29,53 @@ const circumference = 2 * Math.PI * 22;
 ring.style.strokeDasharray = circumference;
 ring.style.strokeDashoffset = circumference;
 
-/* cursor glitter */
-document.addEventListener('mousemove', (e) => {
-    if (!autoMode && !touchActive) createGlitter(e.clientX, e.clientY);
-});
+/* ORIGINAL GLITTER LOGIC */
 
-document.addEventListener('touchmove', (e) => {
+document.addEventListener('mousemove', throttle((e) => {
+    if (!autoMode && !touchActive) createGlitterTrail(e.clientX, e.clientY);
+}, 20));
+
+document.addEventListener('touchmove', throttle((e) => {
     touchActive = true;
     const t = e.touches[0];
-    createGlitter(t.clientX, t.clientY);
-});
+    createGlitterTrail(t.clientX, t.clientY);
+}, 30));
 
 document.addEventListener('touchend', () => touchActive = false);
 
-function createGlitter(x, y) {
+function createGlitterTrail(x, y) {
+    createGlitter(x, y, 'big');
+    for (let i = 0; i < Math.random() * 3 + 3; i++) {
+        setTimeout(() => {
+            const ox = (Math.random() - 0.5) * 50;
+            const oy = (Math.random() - 0.5) * 50;
+            createGlitter(x + ox, y + oy, Math.random() > 0.4 ? 'medium' : 'small');
+        }, i * 40);
+    }
+}
+
+function createGlitter(x, y, size) {
     const g = document.createElement('div');
-    g.className = 'glitter small';
+    g.className = `glitter ${size}`;
     g.style.left = x + 'px';
     g.style.top = y + 'px';
     document.body.appendChild(g);
-    setTimeout(() => g.remove(), 600);
+    setTimeout(() => g.remove(), 700);
 }
 
-/* orbit glitter */
+function throttle(fn, limit) {
+    let wait = false;
+    return function () {
+        if (!wait) {
+            fn.apply(this, arguments);
+            wait = true;
+            setTimeout(() => wait = false, limit);
+        }
+    };
+}
+
+/* ORBIT GLITTER USING SAME PARTICLES */
+
 function startOrbit() {
     stopOrbit();
     const wrap = document.querySelector('.auto-wrap');
@@ -61,11 +84,12 @@ function startOrbit() {
     orbitTimer = setInterval(() => {
         angle -= 8;
         const r = 26;
-        const cx = wrap.getBoundingClientRect().left + 26;
-        const cy = wrap.getBoundingClientRect().top + 26;
+        const rect = wrap.getBoundingClientRect();
+        const cx = rect.left + 26;
+        const cy = rect.top + 26;
         const x = cx + r * Math.cos(angle * Math.PI / 180);
         const y = cy + r * Math.sin(angle * Math.PI / 180);
-        createGlitter(x, y);
+        createGlitter(x, y, Math.random() > 0.5 ? 'medium' : 'small');
     }, 80);
 }
 
@@ -73,7 +97,8 @@ function stopOrbit() {
     clearInterval(orbitTimer);
 }
 
-/* quotes */
+/* QUOTES */
+
 function newQuote() {
     let i;
     do { i = Math.floor(Math.random() * quotes.length); }
@@ -95,13 +120,15 @@ function newQuote() {
 
 btn.addEventListener('click', newQuote);
 
-/* theme */
+/* THEME */
+
 themeToggle.addEventListener('click', () => {
     document.body.classList.toggle('night');
     themeToggle.textContent = document.body.classList.contains('night') ? '☀️' : '🌙';
 });
 
-/* auto */
+/* AUTO MODE */
+
 autoToggle.addEventListener('click', () => {
     autoMode = !autoMode;
     autoToggle.classList.toggle('active', autoMode);
@@ -118,7 +145,8 @@ autoToggle.addEventListener('click', () => {
     }
 });
 
-/* ring */
+/* RING */
+
 function startRing() {
     clearInterval(ringTimer);
     const start = Date.now();
@@ -134,4 +162,5 @@ function stopRing() {
     ring.style.strokeDashoffset = circumference;
 }
 
+/* INIT */
 setTimeout(newQuote, 400);
