@@ -1,170 +1,118 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+const quotes = [
+    { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+    { text: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" },
+    { text: "Stay hungry. Stay foolish.", author: "Steve Jobs" },
+    { text: "Life is what happens to you while you're busy making other plans.", author: "John Lennon" },
+    { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein" },
+    { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+    { text: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius" },
+    { text: "Everything you've ever wanted is on the other side of fear.", author: "George Addair" },
+    { text: "Your limitation—it's only your imagination.", author: "Unknown" },
+    { text: "Push yourself, because no one else is going to do it for you.", author: "Unknown" },
+    { text: "Great things never come from comfort zones.", author: "Unknown" },
+    { text: "Dream it. Wish it. Do it.", author: "Unknown" },
+    { text: "Success doesn't just find you. You have to go out and get it.", author: "Unknown" },
+    { text: "The harder you work for something, the greater you'll feel when you achieve it.", author: "Unknown" },
+    { text: "Dream bigger. Do bigger.", author: "Unknown" }
+];
 
-body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    overflow: hidden;
-    position: relative;
-}
+const quoteEl = document.getElementById('quote');
+const authorEl = document.getElementById('author');
+const btn = document.getElementById('newQuote');
 
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        radial-gradient(circle at 20% 80%, rgba(120,119,198,0.4) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.2) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(120,219,255,0.2) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: 1;
-}
-
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 2rem;
-    gap: 2rem;
-    position: relative;
-    z-index: 2;
-}
-
-.quote {
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.95);
-    line-height: 1.3;
-    text-align: center;
-    max-width: 700px;
-    opacity: 0;
-    transform: translateY(40px);
-    animation: fadeInUp 1.2s cubic-bezier(0.23, 1, 0.320, 1) forwards;
-    text-shadow: 0 4px 20px rgba(0,0,0,0.3);
-}
-
-.author {
-    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
-    color: rgba(255,255,255,0.85);
-    font-style: italic;
-    font-weight: 400;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 1.2s cubic-bezier(0.23, 1, 0.320, 1) 0.4s forwards;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    margin-bottom: 3rem;
-}
-
-.btn {
-    background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.15) 100%);
-    border: 2px solid rgba(255,255,255,0.4);
-    color: white;
-    padding: 1.2rem 3rem;
-    font-size: 1.15rem;
-    font-weight: 500;
-    border-radius: 50px;
-    cursor: pointer;
-    backdrop-filter: blur(20px);
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
-    position: relative;
-    overflow: hidden;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-.btn:hover {
-    background: linear-gradient(135deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.2) 100%);
-    transform: translateY(-4px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-}
-
-.btn:active {
-    transform: translateY(-2px);
-}
-
-/* Enhanced Glitter Effect - MUCH MORE VISIBLE */
-.glitter {
-    position: fixed;
-    pointer-events: none;
-    border-radius: 50%;
-    z-index: 1000;
-    box-shadow: 
-        0 0 10px rgba(255,255,255,0.8),
-        inset 0 0 10px rgba(255,255,255,0.4);
-    animation: sparkle 0.8s ease-out forwards;
-}
-
-.glitter.big {
-    width: 8px;
-    height: 8px;
-    background: radial-gradient(circle, #ffffff 20%, rgba(255,215,0,0.8) 60%, transparent 70%);
-}
-
-.glitter.medium {
-    width: 6px;
-    height: 6px;
-    background: radial-gradient(circle, rgba(255,255,255,0.9) 30%, rgba(173,216,230,0.7) 70%, transparent 80%);
-}
-
-.glitter.small {
-    width: 4px;
-    height: 4px;
-    background: radial-gradient(circle, rgba(255,255,255,1) 40%, rgba(255,192,203,0.8) 80%, transparent 90%);
-}
-
-/* Animations */
-@keyframes fadeInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes sparkle {
-    0% {
-        transform: scale(0) rotate(0deg);
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.8;
-        transform: scale(1.2) rotate(90deg);
-    }
-    100% {
-        transform: scale(0) rotate(180deg);
-        opacity: 0;
-    }
-}
-
-@keyframes ripple {
-    to {
-        transform: scale(4);
-        opacity: 0;
-    }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .container {
-        gap: 1.5rem;
-        padding: 1.5rem;
-    }
+// ENHANCED Glitter cursor effect - NOW VERY VISIBLE
+document.addEventListener('mousemove', (e) => {
+    // Main glitter trail
+    createGlitter(e.clientX, e.clientY, 'big');
     
-    .quote {
-        font-size: 2.2rem;
-        line-height: 1.2;
+    // Smaller particles around
+    for(let i = 0; i < 3; i++) {
+        setTimeout(() => {
+            const offsetX = (Math.random() - 0.5) * 40;
+            const offsetY = (Math.random() - 0.5) * 40;
+            createGlitter(e.clientX + offsetX, e.clientY + offsetY, Math.random() > 0.5 ? 'medium' : 'small');
+        }, i * 50);
     }
+});
+
+function createGlitter(x, y, sizeClass = 'medium') {
+    const glitter = document.createElement('div');
+    glitter.className = `glitter ${sizeClass}`;
+    glitter.style.left = x + 'px';
+    glitter.style.top = y + 'px';
     
-    .author {
-        font-size: 1.3rem;
-    }
+    document.body.appendChild(glitter);
+    
+    setTimeout(() => {
+        glitter.remove();
+    }, 800);
 }
+
+// New quote function
+function newQuote() {
+    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+    
+    // Reset animations
+    quoteEl.style.animation = 'none';
+    authorEl.style.animation = 'none';
+    
+    // Update content
+    quoteEl.textContent = `"${randomQuote.text}"`;
+    authorEl.textContent = `- ${randomQuote.author}`;
+    
+    // Force reflow
+    quoteEl.offsetHeight;
+    authorEl.offsetHeight;
+    
+    // Trigger new animations
+    quoteEl.style.animation = 'fadeInUp 1.2s cubic-bezier(0.23, 1, 0.320, 1) forwards';
+    authorEl.style.animation = 'fadeInUp 1.2s cubic-bezier(0.23, 1, 0.320, 1) 0.4s forwards';
+    
+    // Button feedback
+    btn.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+        btn.style.transform = 'scale(1)';
+    }, 150);
+}
+
+// Button click with ripple
+btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    newQuote();
+    
+    // Ripple effect
+    const ripple = document.createElement('span');
+    const rect = btn.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = e.clientX - rect.left - size / 2;
+    const y = e.clientY - rect.top - size / 2;
+    
+    ripple.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        left: ${x}px;
+        top: ${y}px;
+        background: rgba(255,255,255,0.5);
+        border-radius: 50%;
+        transform: scale(0);
+        animation: ripple 0.6s linear;
+        pointer-events: none;
+    `;
+    
+    btn.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+});
+
+// Keyboard support
+document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') {
+        e.preventDefault();
+        newQuote();
+    }
+});
+
+// Initial load
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => newQuote(), 500);
+});
