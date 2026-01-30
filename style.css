@@ -100,7 +100,7 @@ body::before {
     margin-bottom: 2.5rem;
 }
 
-/* TIMER BUTTON - PILL SHAPE PERFECT */
+/* PURE CSS BORDER TIMER BUTTON */
 .btn {
     position: relative;
     background: linear-gradient(135deg, rgba(20,20,40,0.6) 0%, rgba(10,10,30,0.7) 50%, rgba(0,0,20,0.8) 100%);
@@ -112,22 +112,64 @@ body::before {
     cursor: pointer;
     backdrop-filter: blur(30px);
     transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
-    overflow: hidden;
     text-transform: uppercase;
     letter-spacing: 1.2px;
     box-shadow: 
         0 12px 35px rgba(0,0,0,0.4),
         inset 0 1px 0 rgba(255,255,255,0.1);
     min-width: 240px;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border: 3px solid transparent;
+    background-clip: padding-box;
     touch-action: manipulation;
+    overflow: hidden;
+}
+
+/* TIMER BORDER - PURE CSS CONIC GRADIENT */
+.btn::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 50px;
+    padding: 3px;
+    background: 
+        conic-gradient(
+            from 270deg,
+            #ffd700 0deg,
+            #ffffff 50%,
+            #ffd700 100%,
+            transparent 100%
+        ),
+        conic-gradient(
+            from 270deg,
+            transparent 0%,
+            rgba(40,40,60,0.4) 0%
+        );
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: exclude;
+    z-index: -1;
+    animation: rotateTimer 10s linear infinite;
+}
+
+.btn.timer-progress::before {
+    animation-play-state: running;
+}
+
+.btn.timer-complete::before {
+    animation: none;
+    background: 
+        conic-gradient(
+            #ffd700 0deg 360deg,
+            transparent 360deg
+        ),
+        conic-gradient(rgba(40,40,60,0.4));
 }
 
 .btn:hover:not(.timer-complete) {
-    background: linear-gradient(135deg, rgba(30,30,50,0.7) 0%, rgba(20,20,40,0.8) 50%, rgba(10,10,30,0.9) 100%);
     transform: translateY(-2px);
     box-shadow: 
         0 18px 45px rgba(0,0,0,0.5),
@@ -138,59 +180,20 @@ body::before {
     transform: translateY(-1px) scale(0.98);
 }
 
-/* TIMER SVG - PILL SHAPE PATH (NO CIRCLE) */
-.timer-svg {
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    width: calc(100% + 4px);
-    height: calc(100% + 4px);
-    z-index: 0;
-    pointer-events: none;
-    border-radius: 50px;
-}
-
-.timer-bg {
-    fill: none;
-    stroke: rgba(40,40,60,0.4);
-    stroke-width: 3.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    pathLength: 1;
-}
-
-.timer-progress {
-    fill: none;
-    stroke: url(#timerGradient);
-    stroke-width: 3.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    pathLength: 1;
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    transform: rotate(-90deg);
-    transform-origin: 50% 50%;
-    transition: stroke-dashoffset 0.2s ease;
-}
-
-.btn.timer-complete .timer-progress {
-    stroke-dashoffset: 0;
-    transition: stroke-dashoffset 0.5s cubic-bezier(0.23, 1, 0.320, 1);
-}
-
 .btn.timer-complete {
     animation: autoClick 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+@keyframes rotateTimer {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes autoClick {
     0% { transform: scale(1); }
     50% { transform: scale(0.95); }
     100% { transform: scale(1); }
-}
-
-.btn-text {
-    position: relative;
-    z-index: 2;
 }
 
 .glitter {
