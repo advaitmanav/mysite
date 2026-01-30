@@ -29,7 +29,9 @@ body {
 
 @keyframes gradientShift {
     0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    25% { background-position: 100% 50%; }
+    50% { background-position: 100% 100%; }
+    75% { background-position: 0% 100%; }
     100% { background-position: 0% 50%; }
 }
 
@@ -49,8 +51,8 @@ body {
     max-width: 90vw;
     line-height: 1.35;
     opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 1.2s ease forwards;
+    transform: translateY(40px);
+    animation: fadeInUp 1.2s cubic-bezier(0.23, 1, 0.320, 1) forwards;
     color: #111;
 }
 
@@ -59,7 +61,7 @@ body {
     font-style: italic;
     opacity: 0;
     transform: translateY(20px);
-    animation: fadeInUp 1.2s ease 0.4s forwards;
+    animation: fadeInUp 1.2s cubic-bezier(0.23, 1, 0.320, 1) 0.4s forwards;
 }
 
 @keyframes fadeInUp {
@@ -115,7 +117,8 @@ body {
 .auto-btn.active {
     box-shadow:
         0 0 12px rgba(255,255,255,0.7),
-        0 0 30px rgba(255,255,255,0.5);
+        0 0 30px rgba(255,255,255,0.5),
+        inset 0 0 10px rgba(255,255,255,0.2);
     animation: pulseGlow 1.5s ease-in-out infinite;
 }
 
@@ -134,7 +137,7 @@ body {
 
 .ring circle {
     fill: none;
-    stroke: white;
+    stroke: rgba(255,255,255,0.9);
     stroke-width: 2;
     stroke-dasharray: 138;
     stroke-dashoffset: 138;
@@ -150,36 +153,40 @@ body.night {
 body.night .quote,
 body.night .author { color: white; }
 
-/* glitter */
+/* STRONG ORIGINAL GLITTER */
 
 .glitter {
     position: fixed;
     pointer-events: none;
     border-radius: 50%;
     z-index: 1000;
-    box-shadow: 0 0 12px rgba(255,255,255,0.9);
+    box-shadow:
+        0 0 12px rgba(255,255,255,0.9),
+        inset 0 0 12px rgba(255,255,255,0.5);
     animation: sparkle 0.7s ease-out forwards;
+    will-change: transform;
 }
 
 .glitter.big {
     width: 10px;
     height: 10px;
-    background: radial-gradient(circle, #fff 20%, #ffd700 60%, transparent 70%);
+    background: radial-gradient(circle, #ffffff 20%, #ffd700 60%, transparent 70%);
 }
 
 .glitter.medium {
     width: 7px;
     height: 7px;
-    background: radial-gradient(circle, #fff 30%, #add8e6 70%, transparent 80%);
+    background: radial-gradient(circle, #ffffff 30%, #add8e6 70%, transparent 80%);
 }
 
 .glitter.small {
     width: 5px;
     height: 5px;
-    background: radial-gradient(circle, #fff 40%, #ffc0cb 80%, transparent 90%);
+    background: radial-gradient(circle, #ffffff 40%, #ffc0cb 80%, transparent 90%);
 }
 
 @keyframes sparkle {
-    0% { transform: scale(0); opacity: 1; }
-    100% { transform: scale(1.4); opacity: 0; }
+    0% { transform: scale(0) rotate(0deg); opacity: 1; }
+    50% { opacity: 0.9; transform: scale(1.3) rotate(90deg); }
+    100% { transform: scale(0) rotate(180deg); opacity: 0; }
 }
