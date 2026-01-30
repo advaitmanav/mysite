@@ -11,6 +11,8 @@ const quotes = [
     { text: "When efforts are spent for love, it will always be exhausting. When efforts are given with love, it forsure becomes blossoming.", author: "Advait 2026" }
 ];
 
+
+
 const quoteEl = document.getElementById('quote');
 const authorEl = document.getElementById('author');
 const btn = document.getElementById('newQuote');
@@ -20,59 +22,39 @@ const ring = document.querySelector('.ring circle');
 
 let lastQuoteIndex = -1;
 let autoMode = false;
-let autoInterval = null;
-let ringTimer = null;
+let autoInterval;
+let ringTimer;
 
 const circumference = 2 * Math.PI * 22;
 ring.style.strokeDasharray = circumference;
 ring.style.strokeDashoffset = circumference;
 
-function startRing() {
-    let start = Date.now();
-    clearInterval(ringTimer);
-
-    ringTimer = setInterval(() => {
-        let progress = (Date.now() - start) / 20000;
-        ring.style.strokeDashoffset = circumference * (1 - progress);
-        if (progress >= 1) ring.style.strokeDashoffset = circumference;
-    }, 50);
-}
-
-function stopRing() {
-    clearInterval(ringTimer);
-    ring.style.strokeDashoffset = circumference;
-}
-
-/* non repeating random quote */
 function newQuote() {
-    let index;
-    do { index = Math.floor(Math.random() * quotes.length); }
-    while (index === lastQuoteIndex);
+    let i;
+    do { i = Math.floor(Math.random() * quotes.length); }
+    while (i === lastQuoteIndex);
+    lastQuoteIndex = i;
 
-    lastQuoteIndex = index;
-    const q = quotes[index];
+    quoteEl.style.opacity = 0;
+    authorEl.style.opacity = 0;
 
-    quoteEl.style.animation = 'none';
-    authorEl.style.animation = 'none';
-    quoteEl.textContent = `"${q.text}"`;
-    authorEl.textContent = q.author;
-
-    quoteEl.offsetHeight;
-    authorEl.offsetHeight;
-
-    quoteEl.style.animation = 'fadeInUp 1.2s cubic-bezier(0.23, 1, 0.320, 1) forwards';
-    authorEl.style.animation = 'fadeInUp 1.2s cubic-bezier(0.23, 1, 0.320, 1) 0.4s forwards';
+    setTimeout(() => {
+        quoteEl.textContent = `"${quotes[i].text}"`;
+        authorEl.textContent = quotes[i].author;
+        quoteEl.style.opacity = 1;
+        authorEl.style.opacity = 1;
+    }, 300);
 
     if (autoMode) startRing();
 }
 
-/* theme toggle */
+btn.addEventListener('click', newQuote);
+
 themeToggle.addEventListener('click', () => {
     document.body.classList.toggle('night');
     themeToggle.textContent = document.body.classList.contains('night') ? '☀️' : '🌙';
 });
 
-/* auto toggle */
 autoToggle.addEventListener('click', () => {
     autoMode = !autoMode;
     autoToggle.classList.toggle('active', autoMode);
@@ -87,7 +69,20 @@ autoToggle.addEventListener('click', () => {
     }
 });
 
-/* init */
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => newQuote(), 400);
-});
+function startRing() {
+    clearInterval(ringTimer);
+    const start = Date.now();
+
+    ringTimer = setInterval(() => {
+        const progress = (Date.now() - start) / 20000;
+        ring.style.strokeDashoffset = circumference * (1 - progress);
+        if (progress >= 1) ring.style.strokeDashoffset = circumference;
+    }, 50);
+}
+
+function stopRing() {
+    clearInterval(ringTimer);
+    ring.style.strokeDashoffset = circumference;
+}
+
+setTimeout(newQuote, 400);
