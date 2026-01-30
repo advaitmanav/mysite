@@ -12,7 +12,6 @@ const quotes = [
 ];
 
 
-
 const quoteEl = document.getElementById('quote');
 const authorEl = document.getElementById('author');
 const btn = document.getElementById('newQuote');
@@ -24,11 +23,57 @@ let lastQuoteIndex = -1;
 let autoMode = false;
 let autoInterval;
 let ringTimer;
+let orbitTimer;
+let touchActive = false;
 
 const circumference = 2 * Math.PI * 22;
 ring.style.strokeDasharray = circumference;
 ring.style.strokeDashoffset = circumference;
 
+/* cursor glitter */
+document.addEventListener('mousemove', (e) => {
+    if (!autoMode && !touchActive) createGlitter(e.clientX, e.clientY);
+});
+
+document.addEventListener('touchmove', (e) => {
+    touchActive = true;
+    const t = e.touches[0];
+    createGlitter(t.clientX, t.clientY);
+});
+
+document.addEventListener('touchend', () => touchActive = false);
+
+function createGlitter(x, y) {
+    const g = document.createElement('div');
+    g.className = 'glitter small';
+    g.style.left = x + 'px';
+    g.style.top = y + 'px';
+    document.body.appendChild(g);
+    setTimeout(() => g.remove(), 600);
+}
+
+/* orbit glitter */
+function startOrbit() {
+    stopOrbit();
+    const wrap = document.querySelector('.auto-wrap');
+    let angle = 0;
+
+    orbitTimer = setInterval(() => {
+        angle -= 8;
+        const r = 26;
+        const cx = wrap.getBoundingClientRect().left + 26;
+        const cy = wrap.getBoundingClientRect().top + 26;
+        const x = cx + r * Math.cos(angle * Math.PI / 180);
+        const y = cy + r * Math.sin(angle * Math.PI / 180);
+        createGlitter(x, y);
+    }, 80);
+}
+
+function stopOrbit() {
+    clearInterval(orbitTimer);
+}
+
+/* quotes */
 function newQuote() {
     let i;
     do { i = Math.floor(Math.random() * quotes.length); }
@@ -50,11 +95,13 @@ function newQuote() {
 
 btn.addEventListener('click', newQuote);
 
+/* theme */
 themeToggle.addEventListener('click', () => {
     document.body.classList.toggle('night');
     themeToggle.textContent = document.body.classList.contains('night') ? '☀️' : '🌙';
 });
 
+/* auto */
 autoToggle.addEventListener('click', () => {
     autoMode = !autoMode;
     autoToggle.classList.toggle('active', autoMode);
@@ -62,21 +109,23 @@ autoToggle.addEventListener('click', () => {
     if (autoMode) {
         newQuote();
         startRing();
+        startOrbit();
         autoInterval = setInterval(newQuote, 20000);
     } else {
         clearInterval(autoInterval);
         stopRing();
+        stopOrbit();
     }
 });
 
+/* ring */
 function startRing() {
     clearInterval(ringTimer);
     const start = Date.now();
-
     ringTimer = setInterval(() => {
-        const progress = (Date.now() - start) / 20000;
-        ring.style.strokeDashoffset = circumference * (1 - progress);
-        if (progress >= 1) ring.style.strokeDashoffset = circumference;
+        const p = (Date.now() - start) / 20000;
+        ring.style.strokeDashoffset = circumference * (1 - p);
+        if (p >= 1) ring.style.strokeDashoffset = circumference;
     }, 50);
 }
 
