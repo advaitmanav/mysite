@@ -9,14 +9,6 @@ const quotes = [
     { text: "When you love something or someone with all your heart, there is no backup option.", author: "Advait 2024" },
     { text: "When you give with expectations in return, you're already lost in the first place", author: "Advait 2025" },
     { text: "When efforts are spent for love, it will always be exhausting. When efforts are given with love, it forsure becomes blossoming.", author: "Advait 2026" }
-];
-const quotes = [
-    { text: "The Beloved longs to see me, and I long even more to see Him.", author: "Ibn Arabi" },
-    { text: "Presence is the one we call the Beloved.", author: "Rumi" },
-    { text: "For that which sees is itself and the thing which is seen.", author: "Plotinus" },
-    { text: "When uncreated light appears, there is nothing looking at it.", author: "R.B" },
-    { text: "When efforts are given with love, it becomes blossoming.", author: "Advait" }
-];
 
 const quoteEl = document.getElementById('quote');
 const authorEl = document.getElementById('author');
