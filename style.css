@@ -1,3 +1,60 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --base-color1: #a8edea;
+    --base-color2: #fed6e3;
+    --base-color3: #ffecd2;
+    --base-color4: #fcb69f;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(60deg,
+        var(--base-color1) 0%,
+        var(--base-color2) 25%,
+        var(--base-color3) 50%,
+        var(--base-color4) 75%,
+        var(--base-color1) 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 8s ease infinite;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    touch-action: manipulation;
+    transition: background 1.2s ease, color 0.8s ease;
+}
+
+.quote, .author, .btn {
+    transition: all 0.8s ease;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(circle at 20% 80%, rgba(0,0,0,0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0,0,0,0.05) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(0,0,0,0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+    animation: subtleFloat 20s ease-in-out infinite;
+}
+
+/* rest of your CSS remains exactly the same */
+
+/* auto button position */
+.auto-btn {
+    right: 80px;
+}
+
 .top-controls {
     position: fixed;
     top: 20px;
