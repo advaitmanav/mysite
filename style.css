@@ -25,6 +25,7 @@ body {
     overflow-x: hidden;
     position: relative;
     touch-action: manipulation;
+    transition: background 0.6s ease;
 }
 
 body::before {
@@ -72,7 +73,6 @@ body::before {
 .quote {
     font-size: clamp(1.8rem, 6vw, 2.8rem);
     font-weight: 300;
-    /* DARK BLEND TEXT - Perfect contrast */
     background: linear-gradient(135deg, rgba(40,40,60,0.95) 0%, rgba(20,20,40,0.9) 50%, rgba(10,10,30,0.95) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -83,13 +83,11 @@ body::before {
     opacity: 0;
     transform: translateY(40px);
     animation: fadeInUp 1.2s cubic-bezier(0.23, 1, 0.320, 1) forwards;
-    text-shadow: none;
     filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
 }
 
 .author {
     font-size: clamp(1rem, 3vw, 1.4rem);
-    /* DARK BLEND TEXT */
     background: linear-gradient(135deg, rgba(60,60,80,0.9) 0%, rgba(40,40,60,0.85) 50%, rgba(30,30,50,0.9) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -104,7 +102,6 @@ body::before {
 }
 
 .btn {
-    /* DARK GLASS BUTTON - Blends perfectly */
     background: linear-gradient(135deg, rgba(20,20,40,0.6) 0%, rgba(10,10,30,0.7) 50%, rgba(0,0,20,0.8) 100%);
     border: 2px solid rgba(40,40,60,0.6);
     color: rgba(255,255,255,0.95);
@@ -172,28 +169,7 @@ body::before {
     to { transform: scale(4); opacity: 0; }
 }
 
-@media (max-width: 768px) {
-    .container { padding: 3rem 1.25rem; gap: 2rem; }
-    .quote { font-size: clamp(1.6rem, 7vw, 2.4rem); line-height: 1.3; max-width: 95vw; padding: 0 1rem; }
-    .author { font-size: clamp(0.95rem, 3.5vw, 1.25rem); padding: 0 1rem; margin-bottom: 2rem; }
-    .btn { padding: 1.6rem 4rem; font-size: clamp(1rem, 4vw, 1.15rem); min-width: 240px; }
-}
-
-@media (max-width: 480px) {
-    .container { padding: 2.5rem 1rem; gap: 1.75rem; }
-    .quote { font-size: clamp(1.5rem, 8vw, 2.2rem); }
-    .author { font-size: clamp(0.9rem, 4vw, 1.15rem); }
-    .btn { padding: 1.5rem 3.5rem; min-width: 220px; }
-}
-
-@media (max-height: 500px) and (orientation: landscape) {
-    .container { padding: 1.5rem; gap: 1.5rem; }
-    .quote { font-size: clamp(1.4rem, 5vw, 2rem); max-width: 85vw; }
-    .author { margin-bottom: 1.5rem; }
-}
-
-/* YOUR ORIGINAL CSS IS UNCHANGED ABOVE THIS LINE */
-
+/* theme toggle button */
 .theme-btn {
     position: fixed;
     top: 20px;
@@ -215,11 +191,25 @@ body::before {
     transform: scale(1.1);
 }
 
+/* night mode */
 body.night {
     --base-color1: #0f0c29;
     --base-color2: #302b63;
     --base-color3: #24243e;
     --base-color4: #000000;
+}
+
+body.night .quote {
+    background: none;
+    -webkit-text-fill-color: white;
+    color: white;
+    filter: drop-shadow(0 2px 10px rgba(0,0,0,0.6));
+}
+
+body.night .author {
+    background: none;
+    -webkit-text-fill-color: rgba(255,255,255,0.85);
+    color: rgba(255,255,255,0.85);
 }
 
 body.night .btn {
@@ -230,4 +220,24 @@ body.night .btn {
 
 body.night .theme-btn {
     background: rgba(255,255,255,0.15);
+}
+
+@media (max-width: 768px) {
+    .container { padding: 3rem 1.25rem; gap: 2rem; }
+    .quote { font-size: clamp(1.6rem, 7vw, 2.4rem); line-height: 1.3; max-width: 95vw; padding: 0 1rem; }
+    .author { font-size: clamp(0.95rem, 3.5vw, 1.25rem); padding: 0 1rem; margin-bottom: 2rem; }
+    .btn { padding: 1.6rem 4rem; font-size: clamp(1rem, 4vw, 1.15rem); min-width: 240px; }
+}
+
+@media (max-width: 480px) {
+    .container { padding: 2.5rem 1rem; gap: 1.75rem; }
+    .quote { font-size: clamp(1.5rem, 8vw, 2.2rem); }
+    .author { font-size: clamp(0.9rem, 4vw, 1.15rem); }
+    .btn { padding: 1.5rem 3.5rem; min-width: 220px; }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .container { padding: 1.5rem; gap: 1.5rem; }
+    .quote { font-size: clamp(1.4rem, 5vw, 2rem); max-width: 85vw; }
+    .author { margin-bottom: 1.5rem; }
 }
