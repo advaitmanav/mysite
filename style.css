@@ -1,60 +1,139 @@
+:root {
+    --bg-gradient: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    --glass-bg: rgba(255, 255, 255, 0.15);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --text-color: #fff;
+}
+
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  cursor: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    cursor: none; /* We hide the default cursor here */
 }
 
 body {
-  height: 100vh;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: system-ui, sans-serif;
-  color: white;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--bg-gradient);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    font-family: 'Montserrat', sans-serif;
+    overflow: hidden;
+    color: var(--text-color);
 }
 
-.container {
-  text-align: center;
-  padding: 40px;
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-.quote {
-  font-size: 1.5rem;
-  margin: 30px 0;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.4s ease;
+/* --- Custom Cursor --- */
+.cursor-dot {
+    width: 8px;
+    height: 8px;
+    background-color: white;
 }
 
-.quote.show {
-  opacity: 1;
-  transform: translateY(0);
+.cursor-outline {
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
 }
 
+.cursor-dot, .cursor-outline {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    z-index: 1000;
+    pointer-events: none; /* Allows clicking through the custom cursor */
+}
+
+/* --- Glass Card --- */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    padding: 3rem;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 700px;
+    text-align: center;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-5px); /* Subtle float on hover */
+}
+
+.quote-icon {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+.quote-wrapper {
+    min-height: 150px; /* Prevents card resizing on short quotes */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.quote-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    font-style: italic;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.author-text {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.8;
+    transition: opacity 0.5s ease;
+}
+
+/* Animation Classes */
+.hide {
+    opacity: 0;
+    transform: translateY(-10px);
+    filter: blur(4px);
+}
+
+/* --- Button --- */
 button {
-  padding: 12px 26px;
-  border-radius: 30px;
-  border: none;
-  font-weight: bold;
-  background: white;
-  cursor: pointer;
+    margin-top: 30px;
+    padding: 15px 35px;
+    border-radius: 50px;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.3);
 }
 
-/* CUSTOM CURSOR */
-.cursor {
-  width: 18px;
-  height: 18px;
-  background: white;
-  border-radius: 50%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
+button:hover {
+    background: white;
+    color: #333;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255,255,255,0.5);
+}
+
+button:active {
+    transform: scale(0.95);
 }
