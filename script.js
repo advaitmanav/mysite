@@ -20,20 +20,42 @@ const quoteEl = document.getElementById('quote');
 const authorEl = document.getElementById('author');
 const btn = document.getElementById('newQuote');
 
-// ENHANCED Glitter cursor effect - NOW VERY VISIBLE
-document.addEventListener('mousemove', (e) => {
-    // Main glitter trail
-    createGlitter(e.clientX, e.clientY, 'big');
-    
-    // Smaller particles around
-    for(let i = 0; i < 3; i++) {
-        setTimeout(() => {
-            const offsetX = (Math.random() - 0.5) * 40;
-            const offsetY = (Math.random() - 0.5) * 40;
-            createGlitter(e.clientX + offsetX, e.clientY + offsetY, Math.random() > 0.5 ? 'medium' : 'small');
-        }, i * 50);
+// MOBILE-OPTIMIZED Glitter effect
+let touchActive = false;
+let mouseTrail = [];
+
+// Mouse glitter (desktop)
+document.addEventListener('mousemove', throttle((e) => {
+    if (!touchActive) {
+        createGlitterTrail(e.clientX, e.clientY);
     }
+}, 20));
+
+// Touch glitter (mobile) - tap trails
+document.addEventListener('touchmove', throttle((e) => {
+    touchActive = true;
+    const touch = e.touches[0];
+    createGlitterTrail(touch.clientX, touch.clientY);
+}, 30));
+
+document.addEventListener('touchend', () => {
+    touchActive = false;
 });
+
+// Throttled glitter trail function
+function createGlitterTrail(x, y) {
+    // Main glitter
+    createGlitter(x, y, 'big');
+    
+    // 4-6 smaller particles
+    for(let i = 0; i < Math.random() * 3 + 3; i++) {
+        setTimeout(() => {
+            const offsetX = (Math.random() - 0.5) * 50;
+            const offsetY = (Math.random() - 0.5) * 50;
+            createGlitter(x + offsetX, y + offsetY, Math.random() > 0.4 ? 'medium' : 'small');
+        }, i * 40);
+    }
+}
 
 function createGlitter(x, y, sizeClass = 'medium') {
     const glitter = document.createElement('div');
@@ -43,68 +65,85 @@ function createGlitter(x, y, sizeClass = 'medium') {
     
     document.body.appendChild(glitter);
     
+    // Auto cleanup
     setTimeout(() => {
-        glitter.remove();
-    }, 800);
+        if (glitter.parentNode) glitter.remove();
+    }, 700);
+}
+
+// Throttle utility for performance
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    }
 }
 
 // New quote function
 function newQuote() {
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
     
-    // Reset animations
     quoteEl.style.animation = 'none';
     authorEl.style.animation = 'none';
     
-    // Update content
     quoteEl.textContent = `"${randomQuote.text}"`;
     authorEl.textContent = `- ${randomQuote.author}`;
     
-    // Force reflow
     quoteEl.offsetHeight;
     authorEl.offsetHeight;
     
-    // Trigger new animations
     quoteEl.style.animation = 'fadeInUp 1.2s cubic-bezier(0.23, 1, 0.320, 1) forwards';
     authorEl.style.animation = 'fadeInUp 1.2s cubic-bezier(0.23, 1, 0.320, 1) 0.4s forwards';
     
-    // Button feedback
-    btn.style.transform = 'scale(0.95)';
-    setTimeout(() => {
-        btn.style.transform = 'scale(1)';
-    }, 150);
+    // Button haptic feedback
+    btn.style.transform = 'scale(0.96)';
+    setTimeout(() => btn.style.transform = 'scale(1)', 120);
 }
 
-// Button click with ripple
+// Enhanced mobile button interactions
 btn.addEventListener('click', (e) => {
     e.preventDefault();
     newQuote();
-    
-    // Ripple effect
-    const ripple = document.createElement('span');
+    createRipple(e);
+});
+
+btn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    newQuote();
+    createRipple(e.changedTouches[0]);
+});
+
+function createRipple(e) {
     const rect = btn.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height);
+    const size = Math.max(rect.width, rect.height) * 2;
     const x = e.clientX - rect.left - size / 2;
     const y = e.clientY - rect.top - size / 2;
     
+    const ripple = document.createElement('span');
     ripple.style.cssText = `
         position: absolute;
         width: ${size}px;
         height: ${size}px;
         left: ${x}px;
         top: ${y}px;
-        background: rgba(255,255,255,0.5);
+        background: rgba(255,255,255,0.6);
         border-radius: 50%;
         transform: scale(0);
-        animation: ripple 0.6s linear;
+        animation: ripple 0.5s linear;
         pointer-events: none;
     `;
     
     btn.appendChild(ripple);
-    setTimeout(() => ripple.remove(), 600);
-});
+    setTimeout(() => ripple.remove(), 500);
+}
 
-// Keyboard support
+// Perfect mobile keyboard + swipe support
 document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
         e.preventDefault();
@@ -112,7 +151,28 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+// Swipe gesture for mobile
+let startX, startY;
+document.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+});
+
+document.addEventListener('touchend', (e) => {
+    if (!startX || !startY) return;
+    
+    const endX = e.changedTouches[0].clientX;
+    const endY = e.changedTouches[0].clientY;
+    const diffX = startX - endX;
+    const diffY = startY - endY;
+    
+    // Swipe left/right/up/down for new quote
+    if (Math.abs(diffX) > 50 || Math.abs(diffY) > 50) {
+        newQuote();
+    }
+});
+
 // Initial load
 document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => newQuote(), 500);
+    setTimeout(() => newQuote(), 400);
 });
