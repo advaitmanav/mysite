@@ -12,15 +12,20 @@
             "The only way to do great work is to love what you do."
         </blockquote>
         <span id="author" class="author">- Steve Jobs</span>
-        <div class="btn-container">
-            <button id="newQuote" class="btn">
-                <span class="btn-text"> ✦ Surprise me ✦ </span>
-                <svg class="timer-ring" viewBox="0 0 36 36">
-                    <path class="timer-path-bg" stroke-dasharray="100, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                    <path class="timer-path" stroke-dasharray="0 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                </svg>
-            </button>
-        </div>
+        <button id="newQuote" class="btn">
+            <span class="btn-text"> ✦ Surprise me ✦ </span>
+            <svg class="timer-svg" viewBox="0 0 100 100">
+                <defs>
+                    <linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ffd700"/>
+                        <stop offset="50%" stop-color="#ffffff"/>
+                        <stop offset="100%" stop-color="#ffd700"/>
+                    </linearGradient>
+                </defs>
+                <circle class="timer-bg" cx="50" cy="50" r="44"/>
+                <circle class="timer-progress" cx="50" cy="50" r="44" pathLength="1"/>
+            </svg>
+        </button>
     </div>
     <script src="script.js"></script>
 </body>
