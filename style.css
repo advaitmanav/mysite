@@ -72,6 +72,7 @@ body::before {
 .quote {
     font-size: clamp(1.8rem, 6vw, 2.8rem);
     font-weight: 300;
+    /* DARK BLEND TEXT - Perfect contrast */
     background: linear-gradient(135deg, rgba(40,40,60,0.95) 0%, rgba(20,20,40,0.9) 50%, rgba(10,10,30,0.95) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -88,6 +89,7 @@ body::before {
 
 .author {
     font-size: clamp(1rem, 3vw, 1.4rem);
+    /* DARK BLEND TEXT */
     background: linear-gradient(135deg, rgba(60,60,80,0.9) 0%, rgba(40,40,60,0.85) 50%, rgba(30,30,50,0.9) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -101,14 +103,8 @@ body::before {
     margin-bottom: 2.5rem;
 }
 
-/* TIMER BUTTON WITH RING */
-.btn-container {
-    position: relative;
-    display: inline-block;
-}
-
 .btn {
-    position: relative;
+    /* DARK GLASS BUTTON - Blends perfectly */
     background: linear-gradient(135deg, rgba(20,20,40,0.6) 0%, rgba(10,10,30,0.7) 50%, rgba(0,0,20,0.8) 100%);
     border: 2px solid rgba(40,40,60,0.6);
     color: rgba(255,255,255,0.95);
@@ -119,7 +115,8 @@ body::before {
     cursor: pointer;
     backdrop-filter: blur(30px);
     transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
-    overflow: visible;
+    position: relative;
+    overflow: hidden;
     text-transform: uppercase;
     letter-spacing: 1.2px;
     box-shadow: 
@@ -140,38 +137,9 @@ body::before {
 
 .btn:active {
     transform: translateY(-1px) scale(0.98);
-}
-
-/* TIMER RING */
-.timer-ring {
-    position: absolute;
-    top: -8px;
-    left: -8px;
-    width: calc(100% + 16px);
-    height: calc(100% + 16px);
-    z-index: -1;
-    pointer-events: none;
-}
-
-.timer-path-bg {
-    stroke: rgba(40,40,60,0.3);
-    stroke-width: 3;
-    fill: none;
-    stroke-linecap: round;
-}
-
-.timer-path {
-    stroke: url(#gradient-ring);
-    stroke-width: 3;
-    fill: none;
-    stroke-linecap: round;
-    stroke-dashoffset: 0;
-    transition: stroke-dashoffset 0.2s ease;
-}
-
-.btn-text {
-    position: relative;
-    z-index: 2;
+    box-shadow: 
+        0 8px 25px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
 .glitter {
