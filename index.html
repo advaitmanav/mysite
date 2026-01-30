@@ -3,31 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inspiration Generator</title>
+    <title>Minimal Quote Haven</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-
-    <div class="cursor-dot" data-cursor-dot></div>
-    <div class="cursor-outline" data-cursor-outline></div>
-
     <div class="container">
-        <div class="glass-card">
-            <i class="fas fa-quote-left quote-icon"></i>
-            
-            <div class="quote-wrapper">
-                <p class="quote-text" id="quote"></p>
-                <p class="author-text" id="author"></p>
-            </div>
-
-            <button id="generate-btn">
-                <span>New Quote</span>
-            </button>
+        <div class="quote-container">
+            <blockquote id="quote" class="quote">
+                "The only way to do great work is to love what you do."
+            </blockquote>
+            <span class="author">- Steve Jobs</span>
+            <button id="newQuote" class="btn">✦ New Quote</button>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
