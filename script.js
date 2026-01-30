@@ -4,12 +4,20 @@ const quotes = [
     { text: "When you give with expectations in return, you are already lost", author: "Advait" },
     { text: "When you love something or someone with all your heart, there is no backup option.", author: "Advait 2024" },
 ];
-
 const quoteEl = document.getElementById('quote');
 const authorEl = document.getElementById('author');
 const btn = document.getElementById('newQuote');
+const timerPath = document.querySelector('.timer-path');
+const btnText = document.querySelector('.btn-text');
 
 let touchActive = false;
+let timerInterval;
+let timeLeft = 10;
+let isTimerRunning = false;
+
+// TIMER CIRCLE CONSTANTS
+const CIRCUMFERENCE = 100;
+timerPath.style.strokeDasharray = `${CIRCUMFERENCE} ${CIRCUMFERENCE}`;
 
 // Glitter effect (unchanged)
 document.addEventListener('mousemove', throttle((e) => {
@@ -57,8 +65,45 @@ function throttle(func, limit) {
     }
 }
 
-// Quote change (NO gradient change)
+// 10-SECOND TIMER LOGIC
+function startTimer() {
+    if (isTimerRunning) return;
+    
+    isTimerRunning = true;
+    timeLeft = 10;
+    
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerRing();
+        
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            autoChangeQuote();
+        }
+    }, 1000);
+}
+
+function updateTimerRing() {
+    const progress = ((10 - timeLeft) / 10) * CIRCUMFERENCE;
+    timerPath.style.strokeDashoffset = `${CIRCUMFERENCE - progress}`;
+}
+
+function resetTimer() {
+    clearInterval(timerInterval);
+    isTimerRunning = false;
+    timeLeft = 10;
+    timerPath.style.strokeDashoffset = CIRCUMFERENCE;
+}
+
+function autoChangeQuote() {
+    newQuote();
+    // Auto restart timer after quote change
+    setTimeout(startTimer, 500);
+}
+
 function newQuote() {
+    resetTimer();
+    
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
     
     quoteEl.style.animation = 'none';
@@ -77,15 +122,17 @@ function newQuote() {
     setTimeout(() => btn.style.transform = 'scale(1)', 120);
 }
 
-// Button interactions
+// Button interactions - MANUAL OVERRIDE
 btn.addEventListener('click', (e) => {
     e.preventDefault();
+    resetTimer();
     newQuote();
     createRipple(e);
 });
 
 btn.addEventListener('touchstart', (e) => {
     e.preventDefault();
+    resetTimer();
     newQuote();
     createRipple(e.changedTouches[0]);
 });
@@ -93,8 +140,8 @@ btn.addEventListener('touchstart', (e) => {
 function createRipple(e) {
     const rect = btn.getBoundingClientRect();
     const size = Math.max(rect.width, rect.height) * 2;
-    const x = e.clientX || e.touches[0].clientX - rect.left - size / 2;
-    const y = e.clientY || e.touches[0].clientY - rect.top - size / 2;
+    const x = (e.clientX || e.touches[0].clientX) - rect.left - size / 2;
+    const y = (e.clientY || e.touches[0].clientY) - rect.top - size / 2;
     
     const ripple = document.createElement('span');
     ripple.style.cssText = `
@@ -103,17 +150,18 @@ function createRipple(e) {
         height: ${size}px;
         left: ${x}px;
         top: ${y}px;
-        background: rgba(255,255,255,0.6);
+        background: rgba(255,255,255,0.4);
         border-radius: 50%;
         transform: scale(0);
         animation: ripple 0.5s linear;
         pointer-events: none;
+        z-index: 10;
     `;
     btn.appendChild(ripple);
     setTimeout(() => ripple.remove(), 500);
 }
 
-// Touch/swipe + keyboard
+// Touch/swipe + keyboard (manual override)
 let startX, startY;
 document.addEventListener('touchstart', (e) => {
     startX = e.touches[0].clientX;
@@ -127,6 +175,7 @@ document.addEventListener('touchend', (e) => {
     const diffX = Math.abs(startX - endX);
     const diffY = Math.abs(startY - endY);
     if (diffX > 50 || diffY > 50) {
+        resetTimer();
         newQuote();
     }
 });
@@ -134,11 +183,15 @@ document.addEventListener('touchend', (e) => {
 document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
         e.preventDefault();
+        resetTimer();
         newQuote();
     }
 });
 
-// Initial setup
+// START EVERYTHING
 document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => newQuote(), 400);
+    setTimeout(() => {
+        newQuote();
+        setTimeout(startTimer, 500);
+    }, 400);
 });
