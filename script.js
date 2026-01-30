@@ -16,72 +16,46 @@ const authorEl = document.getElementById('author');
 const btn = document.getElementById('newQuote');
 const themeToggle = document.getElementById('themeToggle');
 const autoToggle = document.getElementById('autoToggle');
+const ring = document.querySelector('.ring circle');
 
 let lastQuoteIndex = -1;
-let touchActive = false;
-
 let autoMode = false;
 let autoInterval = null;
+let ringTimer = null;
 
-/* glitter trail */
-document.addEventListener('mousemove', throttle((e) => {
-    if (!touchActive) createGlitterTrail(e.clientX, e.clientY);
-}, 20));
+const circumference = 2 * Math.PI * 22;
+ring.style.strokeDasharray = circumference;
+ring.style.strokeDashoffset = circumference;
 
-document.addEventListener('touchmove', throttle((e) => {
-    touchActive = true;
-    const touch = e.touches[0];
-    createGlitterTrail(touch.clientX, touch.clientY);
-}, 30));
+function startRing() {
+    let start = Date.now();
+    clearInterval(ringTimer);
 
-document.addEventListener('touchend', () => touchActive = false);
-
-function createGlitterTrail(x, y) {
-    createGlitter(x, y, 'big');
-    for (let i = 0; i < Math.random() * 3 + 3; i++) {
-        setTimeout(() => {
-            const offsetX = (Math.random() - 0.5) * 50;
-            const offsetY = (Math.random() - 0.5) * 50;
-            createGlitter(x + offsetX, y + offsetY, Math.random() > 0.4 ? 'medium' : 'small');
-        }, i * 40);
-    }
+    ringTimer = setInterval(() => {
+        let progress = (Date.now() - start) / 20000;
+        ring.style.strokeDashoffset = circumference * (1 - progress);
+        if (progress >= 1) ring.style.strokeDashoffset = circumference;
+    }, 50);
 }
 
-function createGlitter(x, y, sizeClass = 'medium') {
-    const glitter = document.createElement('div');
-    glitter.className = `glitter ${sizeClass}`;
-    glitter.style.left = x + 'px';
-    glitter.style.top = y + 'px';
-    document.body.appendChild(glitter);
-    setTimeout(() => glitter.remove(), 700);
-}
-
-function throttle(func, limit) {
-    let inThrottle;
-    return function() {
-        if (!inThrottle) {
-            func.apply(this, arguments);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    }
+function stopRing() {
+    clearInterval(ringTimer);
+    ring.style.strokeDashoffset = circumference;
 }
 
 /* non repeating random quote */
 function newQuote() {
     let index;
-    do {
-        index = Math.floor(Math.random() * quotes.length);
-    } while (index === lastQuoteIndex);
+    do { index = Math.floor(Math.random() * quotes.length); }
+    while (index === lastQuoteIndex);
 
     lastQuoteIndex = index;
-    const randomQuote = quotes[index];
+    const q = quotes[index];
 
     quoteEl.style.animation = 'none';
     authorEl.style.animation = 'none';
-
-    quoteEl.textContent = `"${randomQuote.text}"`;
-    authorEl.textContent = randomQuote.author;
+    quoteEl.textContent = `"${q.text}"`;
+    authorEl.textContent = q.author;
 
     quoteEl.offsetHeight;
     authorEl.offsetHeight;
@@ -89,77 +63,31 @@ function newQuote() {
     quoteEl.style.animation = 'fadeInUp 1.2s cubic-bezier(0.23, 1, 0.320, 1) forwards';
     authorEl.style.animation = 'fadeInUp 1.2s cubic-bezier(0.23, 1, 0.320, 1) 0.4s forwards';
 
-    btn.style.transform = 'scale(0.96)';
-    setTimeout(() => btn.style.transform = 'scale(1)', 120);
+    if (autoMode) startRing();
 }
 
-/* button */
-btn.addEventListener('click', (e) => {
-    e.preventDefault();
-    newQuote();
-    createRipple(e);
+/* theme toggle */
+themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('night');
+    themeToggle.textContent = document.body.classList.contains('night') ? '☀️' : '🌙';
 });
 
-btn.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    newQuote();
-    createRipple(e.changedTouches[0]);
-});
+/* auto toggle */
+autoToggle.addEventListener('click', () => {
+    autoMode = !autoMode;
+    autoToggle.classList.toggle('active', autoMode);
 
-function createRipple(e) {
-    const rect = btn.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height) * 2;
-    const x = e.clientX - rect.left - size / 2;
-    const y = e.clientY - rect.top - size / 2;
-
-    const ripple = document.createElement('span');
-    ripple.style.cssText = `
-        position: absolute;
-        width: ${size}px;
-        height: ${size}px;
-        left: ${x}px;
-        top: ${y}px;
-        background: rgba(255,255,255,0.4);
-        border-radius: 50%;
-        transform: scale(0);
-        animation: ripple 0.5s linear;
-        pointer-events: none;
-    `;
-    btn.appendChild(ripple);
-    setTimeout(() => ripple.remove(), 500);
-}
-
-/* keyboard */
-document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') {
-        e.preventDefault();
+    if (autoMode) {
         newQuote();
+        startRing();
+        autoInterval = setInterval(newQuote, 20000);
+    } else {
+        clearInterval(autoInterval);
+        stopRing();
     }
 });
 
 /* init */
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => newQuote(), 400);
-});
-
-/* smooth theme toggle */
-themeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('night');
-    document.body.style.transition = 'background 1.2s ease';
-    themeToggle.textContent = document.body.classList.contains('night') ? '☀️' : '🌙';
-});
-
-/* auto randomize every 20 seconds */
-autoToggle.addEventListener('click', () => {
-    autoMode = !autoMode;
-    autoToggle.textContent = autoMode ? '⏳' : '⏱️';
-
-    if (autoMode) {
-        newQuote();
-        autoInterval = setInterval(() => {
-            newQuote();
-        }, 20000);
-    } else {
-        clearInterval(autoInterval);
-    }
 });
