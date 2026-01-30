@@ -14,19 +14,19 @@ function showRandomQuote() {
   quoteEl.classList.remove("show");
 
   setTimeout(() => {
-    const random = Math.floor(Math.random() * quotes.length);
-    quoteEl.textContent = quotes[random];
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    quoteEl.textContent = quotes[randomIndex];
     quoteEl.classList.add("show");
-  }, 300);
+  }, 200);
 }
 
 btn.addEventListener("click", showRandomQuote);
 
-// initial load
+// show one immediately
 showRandomQuote();
 
-// cursor animation
-window.addEventListener("mousemove", e => {
+// cursor follow
+window.addEventListener("mousemove", (e) => {
   cursor.style.left = e.clientX + "px";
   cursor.style.top = e.clientY + "px";
 });
