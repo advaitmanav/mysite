@@ -15,9 +15,13 @@ const quoteEl = document.getElementById('quote');
 const authorEl = document.getElementById('author');
 const btn = document.getElementById('newQuote');
 const themeToggle = document.getElementById('themeToggle');
+const autoToggle = document.getElementById('autoToggle');
 
 let lastQuoteIndex = -1;
 let touchActive = false;
+
+let autoMode = false;
+let autoInterval = null;
 
 /* glitter trail */
 document.addEventListener('mousemove', throttle((e) => {
@@ -138,8 +142,24 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => newQuote(), 400);
 });
 
-/* theme toggle */
+/* smooth theme toggle */
 themeToggle.addEventListener('click', () => {
     document.body.classList.toggle('night');
+    document.body.style.transition = 'background 1.2s ease';
     themeToggle.textContent = document.body.classList.contains('night') ? '☀️' : '🌙';
+});
+
+/* auto randomize every 20 seconds */
+autoToggle.addEventListener('click', () => {
+    autoMode = !autoMode;
+    autoToggle.textContent = autoMode ? '⏳' : '⏱️';
+
+    if (autoMode) {
+        newQuote();
+        autoInterval = setInterval(() => {
+            newQuote();
+        }, 20000);
+    } else {
+        clearInterval(autoInterval);
+    }
 });
