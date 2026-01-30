@@ -16,38 +16,13 @@ const quotes = [
     { text: "Dream bigger. Do bigger.", author: "Unknown" }
 ];
 
-// MINIMALISTIC GRADIENT PALETTES - Soft & Elegant
-const gradientPresets = [
-    { color1: '#a8edea', color2: '#fed6e3' }, // Mint Rose
-    { color1: '#ffecd2', color2: '#fcb69f' }, // Peach Sunrise
-    { color1: '#e0c3fc', color2: '#8ec5fc' }, // Lavender Sky
-    { color1: '#d299c2', color2: '#fef9d7' }, // Rose Gold
-    { color1: '#a1c4fd', color2: '#c2e9fb' }, // Ocean Breeze
-    { color1: '#ff9a9e', color2: '#fecfef' }, // Blush Pink
-    { color1: '#a8e6cf', color2: '#dcedc1' }, // Mint Lime
-    { color1: '#ffecd2', color2: '#fcb69f' }, // Warm Peach
-    { color1: '#e0c3fc', color2: '#8ec5fc' }, // Purple Blue
-    { color1: '#d299c2', color2: '#fef9d7' }  // Soft Rose
-];
-
 const quoteEl = document.getElementById('quote');
 const authorEl = document.getElementById('author');
 const btn = document.getElementById('newQuote');
 
-let currentGradientIndex = 0;
-
-// DYNAMIC GRADIENT CHANGE
-function changeBackgroundGradient() {
-    currentGradientIndex = (currentGradientIndex + 1) % gradientPresets.length;
-    const preset = gradientPresets[currentGradientIndex];
-    
-    document.body.style.setProperty('--color1', preset.color1);
-    document.body.style.setProperty('--color2', preset.color2);
-}
-
-// MOBILE-OPTIMIZED Glitter effect
 let touchActive = false;
 
+// Glitter effect (unchanged)
 document.addEventListener('mousemove', throttle((e) => {
     if (!touchActive) createGlitterTrail(e.clientX, e.clientY);
 }, 20));
@@ -93,10 +68,8 @@ function throttle(func, limit) {
     }
 }
 
-// New quote with gradient change
+// Quote change (NO gradient change)
 function newQuote() {
-    changeBackgroundGradient(); // NEW: Dynamic gradient!
-    
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
     
     quoteEl.style.animation = 'none';
@@ -131,8 +104,8 @@ btn.addEventListener('touchstart', (e) => {
 function createRipple(e) {
     const rect = btn.getBoundingClientRect();
     const size = Math.max(rect.width, rect.height) * 2;
-    const x = e.clientX - rect.left - size / 2;
-    const y = e.clientY - rect.top - size / 2;
+    const x = e.clientX || e.touches[0].clientX - rect.left - size / 2;
+    const y = e.clientY || e.touches[0].clientY - rect.top - size / 2;
     
     const ripple = document.createElement('span');
     ripple.style.cssText = `
@@ -151,7 +124,7 @@ function createRipple(e) {
     setTimeout(() => ripple.remove(), 500);
 }
 
-// Swipe + keyboard
+// Touch/swipe + keyboard
 let startX, startY;
 document.addEventListener('touchstart', (e) => {
     startX = e.touches[0].clientX;
@@ -162,9 +135,9 @@ document.addEventListener('touchend', (e) => {
     if (!startX || !startY) return;
     const endX = e.changedTouches[0].clientX;
     const endY = e.changedTouches[0].clientY;
-    const diffX = startX - endX;
-    const diffY = startY - endY;
-    if (Math.abs(diffX) > 50 || Math.abs(diffY) > 50) {
+    const diffX = Math.abs(startX - endX);
+    const diffY = Math.abs(startY - endY);
+    if (diffX > 50 || diffY > 50) {
         newQuote();
     }
 });
