@@ -7,7 +7,7 @@ const quotes = [
 const quoteEl = document.getElementById('quote');
 const authorEl = document.getElementById('author');
 const btn = document.getElementById('newQuote');
-const timerPath = document.querySelector('.timer-path');
+const timerProgress = document.querySelector('.timer-progress');
 const btnText = document.querySelector('.btn-text');
 
 let touchActive = false;
@@ -15,11 +15,9 @@ let timerInterval;
 let timeLeft = 10;
 let isTimerRunning = false;
 
-// TIMER CIRCLE CONSTANTS
-const CIRCUMFERENCE = 100;
-timerPath.style.strokeDasharray = `${CIRCUMFERENCE} ${CIRCUMFERENCE}`;
+const CIRCUMFERENCE = 276.46; // 2 * π * 44
 
-// Glitter effect (unchanged)
+// Glitter effect
 document.addEventListener('mousemove', throttle((e) => {
     if (!touchActive) createGlitterTrail(e.clientX, e.clientY);
 }, 20));
@@ -65,40 +63,41 @@ function throttle(func, limit) {
     }
 }
 
-// 10-SECOND TIMER LOGIC
+// PERFECT 10s ANTI-CLOCKWISE BORDER TIMER
 function startTimer() {
     if (isTimerRunning) return;
     
     isTimerRunning = true;
     timeLeft = 10;
+    btn.classList.remove('timer-complete');
     
     timerInterval = setInterval(() => {
         timeLeft--;
-        updateTimerRing();
+        const progress = (10 - timeLeft) / 10; // 0 to 1
+        timerProgress.style.strokeDashoffset = CIRCUMFERENCE * (1 - progress);
         
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
-            autoChangeQuote();
+            triggerAutoClick();
         }
     }, 1000);
-}
-
-function updateTimerRing() {
-    const progress = ((10 - timeLeft) / 10) * CIRCUMFERENCE;
-    timerPath.style.strokeDashoffset = `${CIRCUMFERENCE - progress}`;
 }
 
 function resetTimer() {
     clearInterval(timerInterval);
     isTimerRunning = false;
     timeLeft = 10;
-    timerPath.style.strokeDashoffset = CIRCUMFERENCE;
+    timerProgress.style.strokeDashoffset = CIRCUMFERENCE;
+    btn.classList.remove('timer-complete');
 }
 
-function autoChangeQuote() {
-    newQuote();
-    // Auto restart timer after quote change
-    setTimeout(startTimer, 500);
+function triggerAutoClick() {
+    btn.classList.add('timer-complete');
+    // Auto press animation + quote change
+    setTimeout(() => {
+        newQuote();
+        setTimeout(startTimer, 300);
+    }, 500);
 }
 
 function newQuote() {
@@ -117,12 +116,9 @@ function newQuote() {
     
     quoteEl.style.animation = 'fadeInUp 1.2s cubic-bezier(0.23, 1, 0.320, 1) forwards';
     authorEl.style.animation = 'fadeInUp 1.2s cubic-bezier(0.23, 1, 0.320, 1) 0.4s forwards';
-    
-    btn.style.transform = 'scale(0.96)';
-    setTimeout(() => btn.style.transform = 'scale(1)', 120);
 }
 
-// Button interactions - MANUAL OVERRIDE
+// Manual interactions reset timer
 btn.addEventListener('click', (e) => {
     e.preventDefault();
     resetTimer();
@@ -150,7 +146,7 @@ function createRipple(e) {
         height: ${size}px;
         left: ${x}px;
         top: ${y}px;
-        background: rgba(255,255,255,0.4);
+        background: rgba(255,215,0,0.4);
         border-radius: 50%;
         transform: scale(0);
         animation: ripple 0.5s linear;
@@ -161,7 +157,7 @@ function createRipple(e) {
     setTimeout(() => ripple.remove(), 500);
 }
 
-// Touch/swipe + keyboard (manual override)
+// Swipe + keyboard
 let startX, startY;
 document.addEventListener('touchstart', (e) => {
     startX = e.touches[0].clientX;
@@ -188,7 +184,7 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// START EVERYTHING
+// Initialize
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         newQuote();
