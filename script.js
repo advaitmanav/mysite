@@ -29,10 +29,10 @@ const circumference = 2 * Math.PI * 22;
 ring.style.strokeDasharray = circumference;
 ring.style.strokeDashoffset = circumference;
 
-/* ORIGINAL GLITTER LOGIC */
+/* ALWAYS ON CURSOR GLITTER */
 
 document.addEventListener('mousemove', throttle((e) => {
-    if (!autoMode && !touchActive) createGlitterTrail(e.clientX, e.clientY);
+    if (!touchActive) createGlitterTrail(e.clientX, e.clientY);
 }, 20));
 
 document.addEventListener('touchmove', throttle((e) => {
@@ -74,7 +74,7 @@ function throttle(fn, limit) {
     };
 }
 
-/* ORBIT GLITTER USING SAME PARTICLES */
+/* ORBIT GLITTER */
 
 function startOrbit() {
     stopOrbit();
@@ -118,7 +118,34 @@ function newQuote() {
     if (autoMode) startRing();
 }
 
-btn.addEventListener('click', newQuote);
+btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    newQuote();
+    createRipple(e);
+});
+
+function createRipple(e) {
+    const rect = btn.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height) * 2;
+    const x = e.clientX - rect.left - size / 2;
+    const y = e.clientY - rect.top - size / 2;
+
+    const ripple = document.createElement('span');
+    ripple.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        left: ${x}px;
+        top: ${y}px;
+        background: rgba(255,255,255,0.4);
+        border-radius: 50%;
+        transform: scale(0);
+        animation: ripple 0.5s linear;
+        pointer-events: none;
+    `;
+    btn.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 500);
+}
 
 /* THEME */
 
@@ -127,7 +154,7 @@ themeToggle.addEventListener('click', () => {
     themeToggle.textContent = document.body.classList.contains('night') ? '☀️' : '🌙';
 });
 
-/* AUTO MODE */
+/* AUTO */
 
 autoToggle.addEventListener('click', () => {
     autoMode = !autoMode;
@@ -162,5 +189,4 @@ function stopRing() {
     ring.style.strokeDashoffset = circumference;
 }
 
-/* INIT */
 setTimeout(newQuote, 400);
