@@ -1,19 +1,13 @@
 const quotes = [
-    { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
-    { text: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" },
-    { text: "Stay hungry. Stay foolish.", author: "Steve Jobs" },
-    { text: "Life is what happens to you while you're busy making other plans.", author: "John Lennon" },
-    { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein" },
-    { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
-    { text: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius" },
-    { text: "Everything you've ever wanted is on the other side of fear.", author: "George Addair" },
-    { text: "Your limitation—it's only your imagination.", author: "Unknown" },
-    { text: "Push yourself, because no one else is going to do it for you.", author: "Unknown" },
-    { text: "Great things never come from comfort zones.", author: "Unknown" },
-    { text: "Dream it. Wish it. Do it.", author: "Unknown" },
-    { text: "Success doesn't just find you. You have to go out and get it.", author: "Unknown" },
-    { text: "The harder you work for something, the greater you'll feel when you achieve it.", author: "Unknown" },
-    { text: "Dream bigger. Do bigger.", author: "Unknown" }
+    { text: "The Beloved longs to see me, and I long even more to see Him.", author: "Ibn Arabi" },
+    { text: "The Lover and the Beloved met, and the Beloved said to the Lover, 'Thou needest not to speak to me. Sing to me only with thine eyes, for they are words to my heart - that I may give thee that which thou dost ask.", author: "Ramon Llull" },
+    { text: "Presence is the one we call the Beloved.", author: "Rumi" },
+    { text: "When uncreated light appears, there is nothing looking at it. It is present to itself. It is who we are.  We are not experiencing the state; we are the state.", author: "R.B" },
+    { text: "For that which sees is itself and the thing which is seen. ", author: "Plotinus" },
+    { text: "You may try a hundred things, but only love can release you from your self. Unless your chest gets that burning feeling every time love is mentioned, you are not yet ready to conquer love.", author: "Rumi" },
+    { text: "The sequence is the second best plan. Uncreated Light is the best plan.", author: "R.B." },
+    { text: "From love, bitter becomes sweet.From love, thorns become flowers.From love, vinegar becomes wine.From love, fire becomes light. From love, devil becomes angel. From love, sorrow becomes joy. From love, sickness becomes health. From love, fury becomes mercy. From love, dead becomes alive. From love, king becomes servant. Love knows a hundred ways of showing off. Love flirts with a lover all the time. Knowing how to flirt back with love, that’s how you get your hands on love! You may try a hundred things, but only love can release you from your self. Unless your chest gets that burning feeling every time love is mentioned, you are not yet ready to conquer love.", author: "Poem by Rumi" },
+
 ];
 
 const quoteEl = document.getElementById('quote');
