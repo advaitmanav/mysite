@@ -19,15 +19,10 @@ const quotes = [
 const quoteEl = document.getElementById('quote');
 const authorEl = document.getElementById('author');
 const btn = document.getElementById('newQuote');
-const timerProgress = document.querySelector('.timer-progress');
-const btnText = document.querySelector('.btn-text');
-
 let touchActive = false;
 let timerInterval;
 let timeLeft = 10;
 let isTimerRunning = false;
-
-const TOTAL_PATH = 1; // pathLength="1"
 
 // Glitter effect
 document.addEventListener('mousemove', throttle((e) => {
@@ -75,19 +70,17 @@ function throttle(func, limit) {
     }
 }
 
-// 10s ANTI-CLOCKWISE PILL BORDER TIMER
+// Pure CSS 10s rotating border timer
 function startTimer() {
     if (isTimerRunning) return;
     
     isTimerRunning = true;
     timeLeft = 10;
-    btn.classList.remove('timer-complete');
+    btn.classList.remove('timer-complete', 'timer-progress');
+    btn.classList.add('timer-progress');
     
     timerInterval = setInterval(() => {
         timeLeft--;
-        const progress = (10 - timeLeft) / 10; // 0 → 1
-        timerProgress.style.strokeDashoffset = 1 - progress;
-        
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
             triggerAutoClick();
@@ -99,11 +92,11 @@ function resetTimer() {
     clearInterval(timerInterval);
     isTimerRunning = false;
     timeLeft = 10;
-    timerProgress.style.strokeDashoffset = '1';
-    btn.classList.remove('timer-complete');
+    btn.classList.remove('timer-complete', 'timer-progress');
 }
 
 function triggerAutoClick() {
+    btn.classList.remove('timer-progress');
     btn.classList.add('timer-complete');
     setTimeout(() => {
         newQuote();
@@ -129,7 +122,7 @@ function newQuote() {
     authorEl.style.animation = 'fadeInUp 1.2s cubic-bezier(0.23, 1, 0.320, 1) 0.4s forwards';
 }
 
-// Manual override
+// Manual interactions
 btn.addEventListener('click', (e) => {
     e.preventDefault();
     resetTimer();
