@@ -1,8 +1,7 @@
 const quotes = [
-    { text: "When uncreated light appears, there is nothing looking at it. It is present to itself. It is who we are. We are not experiencing the state; we are the state.", author: "Robert" },
-    { text: "For that which sees is itself and the thing which is seen.", author: "Plotinus" },
+    { text: "When uncreated light appears, there is nothing looking at it. It is present to itself. It is who we are.  We are not experiencing the state; we are the state.", author: "Robert" },
     { text: "The sequence is the second best plan. Uncreated Light is the best plan.", author: "Robert" },
-    { text: "When you give with expectations in return, you lose", author: "Advait" },
+    { text: "When you give with expectations in return, you are already lost", author: "Advait" },
     { text: "When you love something or someone with all your heart, there is no backup option.", author: "Advait 2024" },
 ];
 
