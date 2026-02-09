@@ -1,5 +1,7 @@
 const quotes = [
     { text: "The Beloved longs to see me, and I long even more to see Him.", author: "Ibn Arabi" },
+    { text: "He is not a lover who does not love forever.", author: "Euripedes" },
+    { text: "The great way is very easy, but people prefer shortcuts.", author: "Daode Jing, 53" },
     { text: "The Lover and the Beloved met, and the Beloved said to the Lover, 'Thou needest not to speak to me. Sing to me only with thine eyes, for they are words to my heart - that I may give thee that which thou dost ask.", author: "Ramon Llull" },
     { text: "Presence is the one we call the Beloved.", author: "Rumi" },
     { text: "When uncreated light appears, there is nothing looking at it. It is present to itself. It is who we are. We are not experiencing the state; we are the state.", author: "R.B" },
