@@ -7,71 +7,77 @@ const title = document.getElementById("title");
 async function loadArtworks() {
     const response = await fetch("data/artworks.json");
     artworks = await response.json();
-    showArtwork(index);
+    playArtwork(index);
 }
 
-function showArtwork(i) {
+function playArtwork(i) {
 
     const piece = artworks[i];
 
-    /* Load image first */
     const img = new Image();
     img.src = piece.file;
 
     img.onload = () => {
 
-        /* Set artwork */
+        /* Reset instantly */
         art.style.transition = "none";
         art.style.backgroundImage = `url(${piece.file})`;
-
-        /* Start fully visible */
         art.style.transform = "scale(1)";
         art.style.opacity = 0;
 
-        /* Force repaint */
-        art.offsetHeight;
+        title.style.opacity = 0;
 
-        /* Fade in */
+        art.offsetHeight; // repaint trigger
+
+        /* FADE IN */
         art.style.transition = "opacity 3s ease";
         art.style.opacity = 1;
 
-        showTitle(piece.title);
+        /* Show title AFTER fade in */
+        setTimeout(() => {
+            showTitle(piece.title);
+        }, 3000);
 
-        /* Wait before zoom starts */
+        /* START ZOOM AFTER VIEWING MOMENT */
         setTimeout(() => {
 
             art.style.transition =
-                `transform ${piece.duration}s linear`;
+                `transform ${piece.duration}s ease-in-out`;
 
             art.style.transform =
-                `translate(${piece.zoomEnd.x}%, ${piece.zoomEnd.y}%)
-                 scale(${piece.zoomEnd.scale})`;
+                `scale(${piece.zoomEnd.scale})`;
 
-        }, 2500);  // delay before zoom
+        }, 3500);
 
-        /* Move to next artwork */
-        setTimeout(transitionNext,
-            piece.duration * 1000 + 2500);
+        /* START FADE OUT */
+        setTimeout(() => {
+            fadeOutAndNext();
+        }, piece.duration * 1000 + 3500);
     };
 }
 
 function showTitle(text) {
 
     title.textContent = text;
+
+    title.style.transition = "opacity 2s ease";
     title.style.opacity = 1;
 
     setTimeout(() => {
         title.style.opacity = 0;
-    }, 6000);
+    }, 5000);
 }
 
-function transitionNext() {
+function fadeOutAndNext() {
 
+    art.style.transition = "opacity 3s ease";
     art.style.opacity = 0;
+
+    title.style.opacity = 0;
 
     setTimeout(() => {
         index = (index + 1) % artworks.length;
-        showArtwork(index);
+        playArtwork(index);
     }, 3000);
 }
 
