@@ -29,7 +29,7 @@ async function loadArtworks() {
     playArtwork(index);
 }
 
-/* Main cycle */
+/* Main artwork cycle */
 function playArtwork(i) {
 
     const piece = artworks[i];
@@ -53,7 +53,7 @@ function playArtwork(i) {
         art.style.transition = "opacity 3s ease";
         art.style.opacity = 1;
 
-        /* Show title after fade in */
+        /* Title after fade in */
         setTimeout(() => {
             showTitle(piece.title);
         }, 3000);
@@ -65,10 +65,9 @@ function playArtwork(i) {
             art.style.transform = `scale(${zoomLevel})`;
         }, 3500);
 
-        /* Preload next */
         preloadNext();
 
-        /* Fade out timing */
+        /* Schedule fade out */
         setTimeout(() => {
             fadeOutAndNext();
         }, piece.duration * 1000 + 3500);
@@ -86,7 +85,7 @@ function showTitle(text) {
     }, 10000);
 }
 
-/* Transition */
+/* Transition to next artwork */
 function fadeOutAndNext() {
 
     art.style.opacity = 0;
@@ -98,4 +97,5 @@ function fadeOutAndNext() {
     }, 3000);
 }
 
+/* Start gallery */
 loadArtworks();
