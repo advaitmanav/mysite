@@ -4,12 +4,14 @@ let index = 0;
 const art = document.getElementById("art");
 const title = document.getElementById("title");
 
+/* Load artwork list */
 async function loadArtworks() {
     const response = await fetch("data/artworks.json");
     artworks = await response.json();
     playArtwork(index);
 }
 
+/* Main artwork cycle */
 function playArtwork(i) {
 
     const piece = artworks[i];
@@ -27,13 +29,14 @@ function playArtwork(i) {
 
         title.style.opacity = 0;
 
-        art.offsetHeight; // repaint trigger
+        /* Force repaint */
+        art.offsetHeight;
 
-        /* FADE IN */
+        /* FADE IN IMAGE */
         art.style.transition = "opacity 3s ease";
         art.style.opacity = 1;
 
-        /* Show title AFTER fade in */
+        /* Show title AFTER fade in completes */
         setTimeout(() => {
             showTitle(piece.title);
         }, 3000);
@@ -49,13 +52,14 @@ function playArtwork(i) {
 
         }, 3500);
 
-        /* START FADE OUT */
+        /* Schedule fade out */
         setTimeout(() => {
             fadeOutAndNext();
         }, piece.duration * 1000 + 3500);
     };
 }
 
+/* Title behavior */
 function showTitle(text) {
 
     title.textContent = text;
@@ -63,11 +67,13 @@ function showTitle(text) {
     title.style.transition = "opacity 2s ease";
     title.style.opacity = 1;
 
+    /* visible for 10 seconds now */
     setTimeout(() => {
         title.style.opacity = 0;
-    }, 5000);
+    }, 10000);
 }
 
+/* Fade out and load next artwork */
 function fadeOutAndNext() {
 
     art.style.transition = "opacity 3s ease";
@@ -81,4 +87,5 @@ function fadeOutAndNext() {
     }, 3000);
 }
 
+/* Start gallery */
 loadArtworks();
