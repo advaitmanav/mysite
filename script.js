@@ -4,26 +4,12 @@ let index = 0;
 const art = document.getElementById("art");
 const title = document.getElementById("title");
 
-/* Fisher-Yates Shuffle */
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-}
-
-/* Load artworks */
 async function loadArtworks() {
     const response = await fetch("data/artworks.json");
     artworks = await response.json();
-
-    /* RANDOMIZE ORDER ON LOAD */
-    shuffleArray(artworks);
-
     playArtwork(index);
 }
 
-/* Main artwork cycle */
 function playArtwork(i) {
 
     const piece = artworks[i];
@@ -33,7 +19,7 @@ function playArtwork(i) {
 
     img.onload = () => {
 
-        /* Reset */
+        /* Reset instantly */
         art.style.transition = "none";
         art.style.backgroundImage = `url(${piece.file})`;
         art.style.transform = "scale(1)";
@@ -41,19 +27,20 @@ function playArtwork(i) {
 
         title.style.opacity = 0;
 
-        art.offsetHeight;
+        art.offsetHeight; // repaint trigger
 
-        /* Fade in */
+        /* FADE IN */
         art.style.transition = "opacity 3s ease";
         art.style.opacity = 1;
 
-        /* Show title after fade */
+        /* Show title AFTER fade in */
         setTimeout(() => {
             showTitle(piece.title);
         }, 3000);
 
-        /* Start zoom */
+        /* START ZOOM AFTER VIEWING MOMENT */
         setTimeout(() => {
+
             art.style.transition =
                 `transform ${piece.duration}s ease-in-out`;
 
@@ -62,14 +49,13 @@ function playArtwork(i) {
 
         }, 3500);
 
-        /* Schedule fade out */
+        /* START FADE OUT */
         setTimeout(() => {
             fadeOutAndNext();
         }, piece.duration * 1000 + 3500);
     };
 }
 
-/* Title display */
 function showTitle(text) {
 
     title.textContent = text;
@@ -79,10 +65,9 @@ function showTitle(text) {
 
     setTimeout(() => {
         title.style.opacity = 0;
-    }, 10000);
+    }, 5000);
 }
 
-/* Fade out and move next */
 function fadeOutAndNext() {
 
     art.style.transition = "opacity 3s ease";
@@ -96,5 +81,4 @@ function fadeOutAndNext() {
     }, 3000);
 }
 
-/* Start */
 loadArtworks();
