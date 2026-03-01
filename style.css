@@ -52,7 +52,5 @@ html, body {
     position: fixed;
     width: 100%;
     height: 100%;
-    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-    opacity: 0.06;
-    mix-blend-mode: overlay;
+    background: transparent;
 }
