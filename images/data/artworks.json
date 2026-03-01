@@ -1,0 +1,9 @@
+[
+  {
+    "file": "images/art_01.jpg",
+    "title": "Study of Silence",
+    "duration": 28,
+    "zoomStart": { "scale": 1, "x": 0, "y": 0 },
+    "zoomEnd": { "scale": 1.25, "x": -6, "y": -3 }
+  }
+]
