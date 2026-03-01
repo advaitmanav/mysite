@@ -7,31 +7,30 @@ html, body {
     font-family: "Cormorant Garamond", serif;
 }
 
+/* Main stage */
 #stage {
     position: relative;
     width: 100vw;
     height: 100vh;
 }
 
+/* Artwork layer */
 #art {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: 110%;
+    height: 110%;
+    top: -5%;
+    left: -5%;
 
-    background-size: contain;
+    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 
-    transform-origin: center center;
-
-    opacity: 0;
-    transform: scale(1);
-
-    transition:
-        opacity 3s ease,
-        transform linear;
+    opacity: 1;
+    transition: opacity 3s ease;
 }
 
+/* Artwork title */
 #title {
     position: absolute;
     bottom: 40px;
@@ -44,5 +43,17 @@ html, body {
     text-align: center;
 
     opacity: 0;
-    transition: opacity 2s ease;
+    transition: opacity 3s ease;
+}
+
+/* Film grain overlay */
+#grain {
+    pointer-events: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+
+    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+    opacity: 0.06;
+    mix-blend-mode: overlay;
 }
