@@ -7,10 +7,6 @@ const title = document.getElementById("title");
 async function loadArtworks() {
     const response = await fetch("data/artworks.json");
     artworks = await response.json();
-    startGallery();
-}
-
-function startGallery() {
     showArtwork(index);
 }
 
@@ -18,30 +14,45 @@ function showArtwork(i) {
 
     const piece = artworks[i];
 
-    /* Reset instantly */
-    art.style.transition = "none";
-    art.style.backgroundImage = `url(${piece.file})`;
+    /* Load image first */
+    const img = new Image();
+    img.src = piece.file;
 
-    art.style.transform =
-        `translate(${piece.zoomStart.x}%, ${piece.zoomStart.y}%)
-         scale(${piece.zoomStart.scale})`;
+    img.onload = () => {
 
-    /* Force browser repaint */
-    art.offsetHeight;
+        /* Set artwork */
+        art.style.transition = "none";
+        art.style.backgroundImage = `url(${piece.file})`;
 
-    /* Start slow zoom */
-    art.style.transition =
-        `transform ${piece.duration}s linear`;
+        /* Start fully visible */
+        art.style.transform = "scale(1)";
+        art.style.opacity = 0;
 
-    art.style.transform =
-        `translate(${piece.zoomEnd.x}%, ${piece.zoomEnd.y}%)
-         scale(${piece.zoomEnd.scale})`;
+        /* Force repaint */
+        art.offsetHeight;
 
-    showTitle(piece.title);
+        /* Fade in */
+        art.style.transition = "opacity 3s ease";
+        art.style.opacity = 1;
 
-    setTimeout(() => {
-        transitionNext();
-    }, piece.duration * 1000);
+        showTitle(piece.title);
+
+        /* Wait before zoom starts */
+        setTimeout(() => {
+
+            art.style.transition =
+                `transform ${piece.duration}s linear`;
+
+            art.style.transform =
+                `translate(${piece.zoomEnd.x}%, ${piece.zoomEnd.y}%)
+                 scale(${piece.zoomEnd.scale})`;
+
+        }, 2500);  // delay before zoom
+
+        /* Move to next artwork */
+        setTimeout(transitionNext,
+            piece.duration * 1000 + 2500);
+    };
 }
 
 function showTitle(text) {
@@ -59,13 +70,8 @@ function transitionNext() {
     art.style.opacity = 0;
 
     setTimeout(() => {
-
         index = (index + 1) % artworks.length;
-
-        art.style.opacity = 1;
-
         showArtwork(index);
-
     }, 3000);
 }
 
