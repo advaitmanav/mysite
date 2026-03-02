@@ -4,7 +4,7 @@ let index = 0;
 const art = document.getElementById("art");
 const title = document.getElementById("title");
 
-/* Fisher-Yates Shuffle */
+/* Fisher Yates Shuffle */
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -14,13 +14,18 @@ function shuffleArray(array) {
 
 /* Load artworks */
 async function loadArtworks() {
-    const response = await fetch("data/artworks.json");
-    artworks = await response.json();
+    try {
+        const response = await fetch("data/artworks.json");
+        artworks = await response.json();
 
-    /* RANDOMIZE ORDER ON LOAD */
-    shuffleArray(artworks);
+        /* random order on first load */
+        shuffleArray(artworks);
 
-    playArtwork(index);
+        playArtwork(index);
+
+    } catch (error) {
+        console.error("Failed to load artworks:", error);
+    }
 }
 
 /* Main artwork cycle */
@@ -33,7 +38,7 @@ function playArtwork(i) {
 
     img.onload = () => {
 
-        /* Reset */
+        /* reset instantly */
         art.style.transition = "none";
         art.style.backgroundImage = `url(${piece.file})`;
         art.style.transform = "scale(1)";
@@ -41,18 +46,19 @@ function playArtwork(i) {
 
         title.style.opacity = 0;
 
+        /* force reflow */
         art.offsetHeight;
 
-        /* Fade in */
+        /* fade in artwork */
         art.style.transition = "opacity 3s ease";
         art.style.opacity = 1;
 
-        /* Show title after fade */
+        /* show title after fade */
         setTimeout(() => {
             showTitle(piece.title);
         }, 3000);
 
-        /* Start zoom */
+        /* start zoom */
         setTimeout(() => {
             art.style.transition =
                 `transform ${piece.duration}s ease-in-out`;
@@ -62,10 +68,15 @@ function playArtwork(i) {
 
         }, 3500);
 
-        /* Schedule fade out */
+        /* schedule next artwork */
         setTimeout(() => {
             fadeOutAndNext();
         }, piece.duration * 1000 + 3500);
+    };
+
+    img.onerror = () => {
+        console.error("Image failed to load:", piece.file);
+        fadeOutAndNext();
     };
 }
 
@@ -77,12 +88,13 @@ function showTitle(text) {
     title.style.transition = "opacity 2s ease";
     title.style.opacity = 1;
 
+    /* keep title visible longer */
     setTimeout(() => {
         title.style.opacity = 0;
     }, 10000);
 }
 
-/* Fade out and move next */
+/* Fade out and move to next artwork */
 function fadeOutAndNext() {
 
     art.style.transition = "opacity 3s ease";
@@ -91,10 +103,19 @@ function fadeOutAndNext() {
     title.style.opacity = 0;
 
     setTimeout(() => {
-        index = (index + 1) % artworks.length;
+
+        index++;
+
+        /* after ALL artworks played once */
+        if (index >= artworks.length) {
+            shuffleArray(artworks);   // new exhibition order
+            index = 0;
+        }
+
         playArtwork(index);
+
     }, 3000);
 }
 
-/* Start */
+/* Start museum */
 loadArtworks();
