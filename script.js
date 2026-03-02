@@ -4,6 +4,15 @@ let index = 0;
 const art = document.getElementById("art");
 const title = document.getElementById("title");
 
+/* store active timers */
+let timers = [];
+
+/* helper to clear timers */
+function clearTimers() {
+    timers.forEach(t => clearTimeout(t));
+    timers = [];
+}
+
 /* Fisher Yates Shuffle */
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -18,9 +27,7 @@ async function loadArtworks() {
         const response = await fetch("data/artworks.json");
         artworks = await response.json();
 
-        /* random order on first load */
         shuffleArray(artworks);
-
         playArtwork(index);
 
     } catch (error) {
@@ -31,6 +38,8 @@ async function loadArtworks() {
 /* Main artwork cycle */
 function playArtwork(i) {
 
+    clearTimers();   /* IMPORTANT FIX */
+
     const piece = artworks[i];
 
     const img = new Image();
@@ -38,7 +47,7 @@ function playArtwork(i) {
 
     img.onload = () => {
 
-        /* reset instantly */
+        /* reset */
         art.style.transition = "none";
         art.style.backgroundImage = `url(${piece.file})`;
         art.style.transform = "scale(1)";
@@ -46,36 +55,35 @@ function playArtwork(i) {
 
         title.style.opacity = 0;
 
-        /* force reflow */
         art.offsetHeight;
 
         /* fade in artwork */
         art.style.transition = "opacity 3s ease";
         art.style.opacity = 1;
 
-        /* show title after fade */
-        setTimeout(() => {
+        /* show title */
+        timers.push(setTimeout(() => {
             showTitle(piece.title);
-        }, 3000);
+        }, 3000));
 
-        /* start zoom */
-        setTimeout(() => {
+        /* zoom animation */
+        timers.push(setTimeout(() => {
             art.style.transition =
                 `transform ${piece.duration}s ease-in-out`;
 
             art.style.transform =
                 `scale(${piece.zoomEnd.scale})`;
 
-        }, 3500);
+        }, 3500));
 
-        /* schedule next artwork */
-        setTimeout(() => {
+        /* schedule next */
+        timers.push(setTimeout(() => {
             fadeOutAndNext();
-        }, piece.duration * 1000 + 3500);
+        }, piece.duration * 1000 + 3500));
     };
 
     img.onerror = () => {
-        console.error("Image failed to load:", piece.file);
+        console.error("Image failed:", piece.file);
         fadeOutAndNext();
     };
 }
@@ -88,13 +96,12 @@ function showTitle(text) {
     title.style.transition = "opacity 2s ease";
     title.style.opacity = 1;
 
-    /* keep title visible longer */
-    setTimeout(() => {
+    timers.push(setTimeout(() => {
         title.style.opacity = 0;
-    }, 10000);
+    }, 10000));
 }
 
-/* Fade out and move to next artwork */
+/* Move to next artwork */
 function fadeOutAndNext() {
 
     art.style.transition = "opacity 3s ease";
@@ -102,20 +109,20 @@ function fadeOutAndNext() {
 
     title.style.opacity = 0;
 
-    setTimeout(() => {
+    timers.push(setTimeout(() => {
 
         index++;
 
-        /* after ALL artworks played once */
+        /* reshuffle after full cycle */
         if (index >= artworks.length) {
-            shuffleArray(artworks);   // new exhibition order
+            shuffleArray(artworks);
             index = 0;
         }
 
         playArtwork(index);
 
-    }, 3000);
+    }, 3000));
 }
 
-/* Start museum */
+/* Start */
 loadArtworks();
