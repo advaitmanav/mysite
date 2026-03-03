@@ -4,16 +4,16 @@ let index = 0;
 const art = document.getElementById("art");
 const title = document.getElementById("title");
 
-/* store active timers */
 let timers = [];
+let playSession = 0;   // prevents mismatch
 
-/* helper to clear timers */
+/* clear timers */
 function clearTimers() {
     timers.forEach(t => clearTimeout(t));
     timers = [];
 }
 
-/* Fisher Yates Shuffle */
+/* shuffle */
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -21,7 +21,7 @@ function shuffleArray(array) {
     }
 }
 
-/* Load artworks */
+/* load artworks */
 async function loadArtworks() {
     try {
         const response = await fetch("data/artworks.json");
@@ -30,15 +30,18 @@ async function loadArtworks() {
         shuffleArray(artworks);
         playArtwork(index);
 
-    } catch (error) {
-        console.error("Failed to load artworks:", error);
+    } catch (e) {
+        console.error("Artwork loading failed:", e);
     }
 }
 
-/* Main artwork cycle */
+/* play artwork */
 function playArtwork(i) {
 
-    clearTimers();   /* IMPORTANT FIX */
+    clearTimers();
+
+    playSession++;              // NEW SESSION
+    const session = playSession;
 
     const piece = artworks[i];
 
@@ -47,7 +50,9 @@ function playArtwork(i) {
 
     img.onload = () => {
 
-        /* reset */
+        /* ignore outdated loads */
+        if (session !== playSession) return;
+
         art.style.transition = "none";
         art.style.backgroundImage = `url(${piece.file})`;
         art.style.transform = "scale(1)";
@@ -57,17 +62,19 @@ function playArtwork(i) {
 
         art.offsetHeight;
 
-        /* fade in artwork */
+        /* fade in */
         art.style.transition = "opacity 3s ease";
         art.style.opacity = 1;
 
-        /* show title */
         timers.push(setTimeout(() => {
+            if (session !== playSession) return;
             showTitle(piece.title);
         }, 3000));
 
-        /* zoom animation */
+        /* zoom */
         timers.push(setTimeout(() => {
+            if (session !== playSession) return;
+
             art.style.transition =
                 `transform ${piece.duration}s ease-in-out`;
 
@@ -76,23 +83,22 @@ function playArtwork(i) {
 
         }, 3500));
 
-        /* schedule next */
+        /* next artwork */
         timers.push(setTimeout(() => {
+            if (session !== playSession) return;
             fadeOutAndNext();
         }, piece.duration * 1000 + 3500));
     };
 
     img.onerror = () => {
-        console.error("Image failed:", piece.file);
         fadeOutAndNext();
     };
 }
 
-/* Title display */
+/* title */
 function showTitle(text) {
 
     title.textContent = text;
-
     title.style.transition = "opacity 2s ease";
     title.style.opacity = 1;
 
@@ -101,19 +107,17 @@ function showTitle(text) {
     }, 10000));
 }
 
-/* Move to next artwork */
+/* next */
 function fadeOutAndNext() {
 
     art.style.transition = "opacity 3s ease";
     art.style.opacity = 0;
-
     title.style.opacity = 0;
 
     timers.push(setTimeout(() => {
 
         index++;
 
-        /* reshuffle after full cycle */
         if (index >= artworks.length) {
             shuffleArray(artworks);
             index = 0;
@@ -124,5 +128,5 @@ function fadeOutAndNext() {
     }, 3000));
 }
 
-/* Start */
+/* start */
 loadArtworks();
